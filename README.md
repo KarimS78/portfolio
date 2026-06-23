@@ -3,7 +3,7 @@
 Personal portfolio of **Karim Sehil — Product Engineer · Full-Stack Developer**.
 From the lab floor to production code.
 
-🔗 **Live site:** https://karimportfolio1.netlify.app
+🔗 **Live site:** https://karimsehil.com
 
 ## About
 
@@ -32,6 +32,6 @@ npx serve .
 
 ## Contact
 
-- Portfolio: https://karimportfolio1.netlify.app
+- Portfolio: https://karimsehil.com
 - LinkedIn: https://www.linkedin.com/in/karim-sehil
 - GitHub: https://github.com/karim-ops78
