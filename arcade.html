@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KARIM.EXE — Product Engineer · Full-Stack</title>
+<meta name="description" content="Product Engineer et développeur full-stack. Du terrain en traitement des eaux au logiciel en production. Next.js, Supabase, TypeScript. Disponible en remote." />
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Karim","jobTitle":"Product Engineer · Full-Stack Developer","knowsAbout":["Next.js","React","TypeScript","Supabase","PostgreSQL","Traitement des eaux","Chimie analytique"],"address":{"@type":"PostalAddress","addressRegion":"Île-de-France","addressCountry":"FR"}}
+</script>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%2312101F'/%3E%3Crect x='3' y='3' width='10' height='7' fill='%2334E0C4'/%3E%3Crect x='6' y='11' width='4' height='2' fill='%23F2B441'/%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#12101F; --panel:#1B1830; --panel-2:#232043;
+  --teal:#34E0C4; --amber:#F2B441; --magenta:#E0567E; --grey:#7B86A0;
+  --cream:#F3ECDE; --line:#34315A;
+  --px:"Press Start 2P", system-ui, sans-serif;
+  --term:"VT323", ui-monospace, monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--bg);color:var(--cream);font-family:var(--term);font-size:1.18rem;line-height:1.35;overflow-x:hidden;-webkit-font-smoothing:none;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;}
+.px{font-family:var(--px);line-height:1.6;}
+
+/* scanlines / CRT overlay */
+.crt{position:fixed;inset:0;z-index:300;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.16) 3px,rgba(0,0,0,0) 4px);mix-blend-mode:multiply;}
+.crt::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 120% at 50% 50%,transparent 62%,rgba(0,0,0,.45) 100%);}
+
+/* ============ INTRO / TITLE SCREEN ============ */
+#intro{position:fixed;inset:0;z-index:200;background:#0C0A16;display:flex;align-items:center;justify-content:center;transition:opacity .5s ease;}
+.scene-wrap{width:min(760px,100%);padding:18px;text-align:center;}
+.titlebar{font-family:var(--px);font-size:clamp(.85rem,3.6vw,1.4rem);color:var(--teal);letter-spacing:.04em;margin-bottom:14px;text-shadow:0 3px 0 #0a3d36;}
+.titlebar small{color:var(--amber);}
+.scene{width:100%;height:auto;display:block;image-rendering:pixelated;transition:transform 1s cubic-bezier(.7,0,.4,1), opacity .8s ease;transform-origin:50% 54%;}
+#intro.zoom .scene{transform:scale(7);opacity:0;}
+#intro.zoom .titlebar,#intro.zoom .startbar{opacity:0;transition:opacity .35s;}
+.startbar{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.press{font-family:var(--px);font-size:clamp(.7rem,3vw,1rem);color:var(--cream);animation:blink 1.05s steps(1) infinite;}
+@keyframes blink{50%{opacity:.15;}}
+.startbtn{font-family:var(--px);font-size:.72rem;color:#0a2a25;background:var(--teal);border:0;padding:14px 22px;box-shadow:0 5px 0 #15a98f;transition:transform .08s, box-shadow .08s;}
+.startbtn:active{transform:translateY(4px);box-shadow:0 1px 0 #15a98f;}
+.hintkey{font-family:var(--term);color:var(--grey);font-size:1rem;}
+
+/* ============ GAME / PORTFOLIO ============ */
+#game{display:none;min-height:100vh;background:radial-gradient(130% 90% at 50% 0%, #15233a 0%, var(--bg) 60%);}
+body.entered #game{display:block;animation:fadein .6s ease;}
+body.entered #intro{display:none;}
+@keyframes fadein{from{opacity:0;}to{opacity:1;}}
+
+.hud{position:sticky;top:0;z-index:60;background:rgba(12,10,22,.9);backdrop-filter:blur(6px);border-bottom:2px solid var(--line);}
+.hud-in{max-width:1080px;margin:0 auto;padding:0 18px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.hud .name{font-family:var(--px);font-size:.72rem;color:var(--teal);}
+.hud .name b{color:var(--amber);}
+.hud .coin{font-family:var(--px);font-size:.6rem;color:var(--grey);}
+@media(max-width:560px){.hud .coin{display:none;}}
+
+.screenwrap{max-width:1080px;margin:0 auto;padding:30px 18px 120px;}
+
+/* menu screen */
+.menu-title{font-family:var(--px);font-size:clamp(.8rem,3.4vw,1.15rem);color:var(--cream);text-align:center;margin:18px 0 6px;}
+.menu-sub{text-align:center;color:var(--grey);font-size:1.25rem;margin-bottom:30px;}
+.menu-sub b{color:var(--teal);}
+.panels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:720px){.panels{grid-template-columns:1fr;}}
+.panel{position:relative;background:var(--panel);border:2px solid var(--line);padding:26px 20px 22px;text-align:center;cursor:pointer;overflow:hidden;transition:transform .12s, border-color .2s, background .2s;}
+.panel::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(52,224,196,.05) 4px);opacity:0;transition:opacity .2s;}
+.panel:hover,.panel:focus-visible{transform:translateY(-4px);border-color:var(--teal);background:var(--panel-2);outline:none;}
+.panel:hover::before{opacity:1;}
+.panel .ico{width:64px;height:64px;margin:0 auto 16px;image-rendering:pixelated;}
+.panel .p-no{font-family:var(--px);font-size:.55rem;color:var(--amber);margin-bottom:10px;}
+.panel .p-label{font-family:var(--px);font-size:.8rem;color:var(--cream);margin-bottom:12px;}
+.panel .p-blurb{color:var(--grey);font-size:1.15rem;min-height:2.6em;}
+.panel .p-go{font-family:var(--px);font-size:.55rem;color:var(--teal);margin-top:14px;opacity:0;transition:opacity .2s;}
+.panel:hover .p-go,.panel:focus-visible .p-go{opacity:1;}
+
+/* sub-screens */
+.screen{display:none;}
+.screen.active{display:block;animation:slidein .35s ease;}
+@keyframes slidein{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:none;}}
+.back{font-family:var(--px);font-size:.62rem;color:var(--amber);background:var(--panel);border:2px solid var(--line);padding:11px 15px;margin-bottom:26px;transition:border-color .2s,transform .08s;}
+.back:hover{border-color:var(--amber);}
+.back:active{transform:translateY(2px);}
+.sc-h{font-family:var(--px);font-size:clamp(.85rem,3.6vw,1.2rem);color:var(--teal);margin:0 0 22px;text-shadow:0 3px 0 #0a3d36;}
+
+/* RPG sheet (qui suis-je) */
+.rpg{display:grid;grid-template-columns:1fr;gap:22px;}
+@media(min-width:760px){.rpg{grid-template-columns:1fr 1.2fr;}}
+.sheet{background:var(--panel);border:2px solid var(--line);padding:22px;}
+.sheet .pl{font-family:var(--px);font-size:.7rem;color:var(--amber);margin-bottom:18px;}
+.stat{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:1.2rem;}
+.stat:last-child{border-bottom:0;}
+.stat .sk{color:var(--grey);font-family:var(--px);font-size:.52rem;letter-spacing:.04em;padding-top:3px;}
+.stat .sv{color:var(--cream);text-align:right;}
+.bio p{font-size:1.25rem;color:#d7d1c5;margin:0 0 16px;}
+.bio p b{color:var(--teal);}
+.quests{margin-top:8px;}
+.quests h4{font-family:var(--px);font-size:.6rem;color:var(--amber);margin:0 0 14px;}
+.quest{display:flex;gap:10px;align-items:baseline;font-size:1.18rem;padding:6px 0;color:#cfc9bd;}
+.quest .star{color:var(--teal);}
+
+/* projects */
+.proj{background:var(--panel);border:2px solid var(--line);padding:24px;margin-bottom:16px;transition:border-color .2s, transform .12s;}
+.proj:hover{border-color:var(--teal);transform:translateY(-3px);}
+.proj.boss{border-color:var(--amber);background:linear-gradient(180deg,#241a33,#1B1830);}
+.proj .ptag{font-family:var(--px);font-size:.52rem;color:var(--amber);margin-bottom:14px;}
+.proj h3{font-family:var(--px);font-size:.82rem;color:var(--cream);margin:0 0 14px;line-height:1.5;}
+.proj p{color:#cfc9bd;font-size:1.2rem;margin:0 0 16px;}
+.tags{display:flex;flex-wrap:wrap;gap:7px;}
+.tag{font-family:var(--term);font-size:1.02rem;border:1px solid var(--line);color:var(--grey);padding:3px 10px;}
+.proj .meta{font-family:var(--px);font-size:.5rem;color:var(--grey);margin-top:16px;display:flex;flex-wrap:wrap;gap:16px;}
+.proj .plink{font-family:var(--px);font-size:.56rem;color:var(--teal);margin-top:16px;display:inline-block;}
+.proj .plink:hover{color:var(--amber);}
+@media(min-width:760px){.prow{display:grid;grid-template-columns:1fr 1fr;gap:16px;}.prow .proj{margin-bottom:0;}}
+.inv{margin-top:30px;background:var(--panel);border:2px solid var(--line);padding:22px;}
+.inv h4{font-family:var(--px);font-size:.6rem;color:var(--amber);margin:0 0 16px;}
+.inv-grid{display:grid;grid-template-columns:1fr;gap:18px;}
+@media(min-width:620px){.inv-grid{grid-template-columns:repeat(4,1fr);}}
+.inv-col h5{font-family:var(--px);font-size:.46rem;color:var(--grey);margin:0 0 10px;letter-spacing:.04em;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{font-family:var(--term);font-size:1.05rem;background:var(--panel-2);border:1px solid var(--line);padding:3px 9px;}
+.chip.dom{border-color:var(--teal);color:var(--teal);}
+
+/* contact */
+.cgrid{display:grid;grid-template-columns:1fr;gap:30px;}
+@media(min-width:760px){.cgrid{grid-template-columns:1.05fr .95fr;}}
+.field{margin-bottom:15px;}
+label{font-family:var(--px);font-size:.5rem;color:var(--grey);display:block;margin-bottom:8px;letter-spacing:.04em;}
+input,textarea{width:100%;font-family:var(--term);font-size:1.2rem;color:var(--cream);background:var(--panel);border:2px solid var(--line);padding:11px 13px;transition:border-color .2s;}
+input:focus,textarea:focus{outline:none;border-color:var(--teal);}
+textarea{resize:vertical;min-height:120px;}
+.send{font-family:var(--px);font-size:.66rem;color:#0a2a25;background:var(--teal);border:0;padding:14px 22px;box-shadow:0 5px 0 #15a98f;transition:transform .08s, box-shadow .08s;}
+.send:active{transform:translateY(4px);box-shadow:0 1px 0 #15a98f;}
+.reach a{display:flex;align-items:center;gap:12px;font-size:1.2rem;padding:14px 0;border-bottom:1px solid var(--line);transition:color .2s;}
+.reach a:hover{color:var(--teal);}
+.reach a .k{font-family:var(--px);font-size:.48rem;color:var(--amber);min-width:88px;}
+
+footer{border-top:2px solid var(--line);margin-top:40px;padding:24px 18px;text-align:center;}
+.foot{font-family:var(--px);font-size:.52rem;color:var(--grey);line-height:1.8;}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;}
+  .scene{transition:none!important;}
+  html{scroll-behavior:auto;}
+}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;}
+</style>
+</head>
+<body>
+<div class="crt"></div>
+
+<!-- ============ INTRO / TITLE SCREEN ============ -->
+<div id="intro">
+  <div class="scene-wrap">
+    <div class="titlebar px">KARIM<small>.EXE</small></div>
+
+    <!-- Pixel scene: dev seen from behind, coding at night -->
+    <svg class="scene" id="scene" viewBox="0 0 160 110" shape-rendering="crispEdges" role="img" aria-label="Développeur de dos en train de coder la nuit, scène en pixel-art">
+      <!-- wall + floor -->
+      <rect width="160" height="110" fill="#1A1730"/>
+      <rect y="84" width="160" height="26" fill="#14121F"/>
+      <!-- window -->
+      <rect x="14" y="12" width="38" height="30" fill="#2B2E55"/>
+      <rect x="14" y="12" width="38" height="30" fill="none" stroke="#3E4170" stroke-width="2"/>
+      <rect x="32" y="12" width="2" height="30" fill="#3E4170"/>
+      <rect x="14" y="26" width="38" height="2" fill="#3E4170"/>
+      <rect x="40" y="16" width="6" height="6" fill="#E9E4C8"/> <!-- moon -->
+      <rect x="20" y="18" width="2" height="2" fill="#F3ECDE"/>
+      <rect x="26" y="32" width="2" height="2" fill="#F3ECDE"/>
+      <rect x="18" y="34" width="2" height="2" fill="#F3ECDE"/>
+      <!-- poster: football goal (ref coups francs) -->
+      <rect x="112" y="14" width="32" height="24" fill="#16142A"/>
+      <rect x="112" y="14" width="32" height="24" fill="none" stroke="#3E4170" stroke-width="2"/>
+      <rect x="118" y="20" width="20" height="12" fill="none" stroke="#5A6B72" stroke-width="1"/>
+      <rect x="124" y="24" width="3" height="3" fill="#F3ECDE"/>
+      <!-- poster: cadre (ref arabe/labo) -->
+      <rect x="72" y="14" width="26" height="20" fill="#16142A"/>
+      <rect x="72" y="14" width="26" height="20" fill="none" stroke="#3E4170" stroke-width="2"/>
+      <rect x="77" y="20" width="16" height="2" fill="#34E0C4"/>
+      <rect x="79" y="25" width="12" height="2" fill="#34E0C4"/>
+      <!-- desk -->
+      <rect x="0" y="80" width="160" height="6" fill="#4A352A"/>
+      <rect x="0" y="86" width="160" height="3" fill="#3A2A22"/>
+      <!-- monitor (zoom target) -->
+      <rect x="56" y="44" width="48" height="32" fill="#2A2740"/>
+      <rect id="screen" x="59" y="47" width="42" height="26" fill="#0E1A1C"/>
+      <!-- code on screen -->
+      <rect x="62" y="50" width="14" height="2" fill="#B9A6E6"/>
+      <rect x="62" y="54" width="22" height="2" fill="#34E0C4"/>
+      <rect x="66" y="58" width="18" height="2" fill="#F2B441"/>
+      <rect x="66" y="62" width="14" height="2" fill="#8FCF8F"/>
+      <rect x="62" y="66" width="20" height="2" fill="#E0567E"/>
+      <rect x="84" y="66" width="3" height="2" fill="#34E0C4"/>
+      <rect x="78" y="74" width="4" height="4" fill="#2A2740"/> <!-- stand -->
+      <rect x="72" y="78" width="16" height="2" fill="#2A2740"/>
+      <!-- chair + dev from behind -->
+      <rect x="64" y="64" width="32" height="20" fill="#211E36"/> <!-- chair back -->
+      <rect x="70" y="66" width="20" height="14" fill="#C75D43"/> <!-- hoodie -->
+      <rect x="74" y="56" width="12" height="10" fill="#2B2230"/> <!-- hair/head back -->
+      <rect x="76" y="64" width="8" height="3" fill="#C98B66"/>  <!-- nape -->
+      <!-- keyboard -->
+      <rect x="66" y="80" width="28" height="3" fill="#2A2740"/>
+      <rect x="68" y="81" width="2" height="1" fill="#5A6B72"/>
+      <rect x="72" y="81" width="2" height="1" fill="#5A6B72"/>
+      <rect x="76" y="81" width="2" height="1" fill="#5A6B72"/>
+      <rect x="80" y="81" width="2" height="1" fill="#5A6B72"/>
+      <!-- desk refs: football -->
+      <rect x="36" y="74" width="8" height="6" fill="#F3ECDE"/>
+      <rect x="38" y="76" width="2" height="2" fill="#14121F"/>
+      <rect x="41" y="77" width="2" height="2" fill="#14121F"/>
+      <!-- flask (chimie) -->
+      <rect x="112" y="72" width="6" height="8" fill="#7FB7C9"/>
+      <rect x="113" y="76" width="4" height="4" fill="#34E0C4"/>
+      <rect x="114" y="70" width="2" height="2" fill="#7FB7C9"/>
+      <!-- mug + steam -->
+      <rect x="122" y="74" width="6" height="6" fill="#E0567E"/>
+      <rect x="124" y="70" width="2" height="2" fill="#6E6A86"/>
+      <rect x="126" y="67" width="2" height="2" fill="#6E6A86"/>
+    </svg>
+
+    <div class="startbar">
+      <div class="press">▶ PRESS START</div>
+      <button class="startbtn" id="startBtn" type="button">ENTRER</button>
+      <span class="hintkey">[ clic ou touche ENTRÉE ]</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ GAME / PORTFOLIO ============ -->
+<div id="game">
+  <div class="hud">
+    <div class="hud-in">
+      <a href="#" class="name px" id="homeBtn">KARIM<b>.EXE</b></a>
+      <span class="coin">★ PRODUCT ENGINEER</span>
+    </div>
+  </div>
+
+  <div class="screenwrap">
+
+    <!-- ===== MENU ===== -->
+    <section class="screen active" id="screen-menu">
+      <h1 class="menu-title px">SÉLECTION</h1>
+      <p class="menu-sub">Full-stack · <b>Next.js / Supabase</b> · dispo en remote</p>
+      <div class="panels">
+        <button class="panel" data-go="about">
+          <svg class="ico" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="5" y="2" width="6" height="6" fill="#C98B66"/><rect x="5" y="2" width="6" height="2" fill="#2B2230"/><rect x="4" y="9" width="8" height="5" fill="#C75D43"/></svg>
+          <div class="p-no px">01</div>
+          <div class="p-label px">QUI SUIS-JE</div>
+          <div class="p-blurb">Du labo au code. Mon parcours et ma fiche de perso.</div>
+          <div class="p-go px">▶ ENTRER</div>
+        </button>
+        <button class="panel" data-go="projects">
+          <svg class="ico" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="2" y="3" width="12" height="9" fill="#2A2740"/><rect x="3" y="4" width="10" height="7" fill="#0E1A1C"/><rect x="4" y="5" width="5" height="1" fill="#34E0C4"/><rect x="4" y="7" width="7" height="1" fill="#F2B441"/><rect x="4" y="9" width="4" height="1" fill="#E0567E"/></svg>
+          <div class="p-no px">02</div>
+          <div class="p-label px">PROJETS</div>
+          <div class="p-blurb">Ce que je développe. AppLabo en tête d'affiche.</div>
+          <div class="p-go px">▶ ENTRER</div>
+        </button>
+        <button class="panel" data-go="contact">
+          <svg class="ico" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="2" y="4" width="12" height="8" fill="#1B1830"/><rect x="2" y="4" width="12" height="8" fill="none" stroke="#34E0C4" stroke-width="1"/><path d="M2 4 L8 9 L14 4" fill="none" stroke="#F2B441" stroke-width="1"/></svg>
+          <div class="p-no px">03</div>
+          <div class="p-label px">ME CONTACTER</div>
+          <div class="p-blurb">Un poste, un projet ? Lançons la partie.</div>
+          <div class="p-go px">▶ ENTRER</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== QUI SUIS-JE ===== -->
+    <section class="screen" id="screen-about">
+      <button class="back px" data-back type="button">◀ RETOUR</button>
+      <h2 class="sc-h">QUI SUIS-JE</h2>
+      <div class="rpg">
+        <div class="sheet">
+          <div class="pl px">PLAYER 01 — KARIM</div>
+          <div class="stat"><span class="sk">CLASSE</span><span class="sv">Product Engineer / Full-Stack</span></div>
+          <div class="stat"><span class="sk">ORIGINE</span><span class="sv">Chimie & traitement des eaux</span></div>
+          <div class="stat"><span class="sk">ARME</span><span class="sv">Next.js + Supabase</span></div>
+          <div class="stat"><span class="sk">LANGUES</span><span class="sv">FR · AR · EN</span></div>
+          <div class="stat"><span class="sk">DISPO</span><span class="sv">Remote</span></div>
+          <div class="stat"><span class="sk">ZONE</span><span class="sv">Île-de-France</span></div>
+        </div>
+        <div class="bio">
+          <p>Technicien de terrain devenu <b>builder</b>. Une formation en chimie et environnement, puis plusieurs années sur le terrain dans le traitement des eaux.</p>
+          <p>C'est là que j'ai compris une chose : les meilleurs outils naissent de ceux qui connaissent le métier. Alors j'ai appris à les construire. Je parle aux utilisateurs, je conçois, je code, je déploie.</p>
+          <div class="quests">
+            <h4 class="px">PARCOURS</h4>
+            <div class="quest"><span class="star">✦</span><span>Préleveur instrumentiste — traitement des eaux <em style="color:#7B86A0">(aujourd'hui)</em></span></div>
+            <div class="quest"><span class="star">✦</span><span>Licence Pro — Maîtrise de l'Énergie et Environnement</span></div>
+            <div class="quest"><span class="star">✦</span><span>DUT Génie Chimique / Génie des Procédés — IUT de Rambouillet (2018–2020)</span></div>
+            <div class="quest"><span class="star">✦</span><span>Licence Maths, Info, Physique & Ingénierie — CY Cergy (2016–2018)</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROJETS ===== -->
+    <section class="screen" id="screen-projects">
+      <button class="back px" data-back type="button">◀ RETOUR</button>
+      <h2 class="sc-h">PROJETS</h2>
+
+      <article class="proj boss">
+        <div class="ptag px">★ PROJET PRINCIPAL</div>
+        <h3>AppLabo — digitalisation des opérations de laboratoire</h3>
+        <p>Application web pour digitaliser les opérations d'un laboratoire : tournées de prélèvement, saisie et suivi des résultats d'analyse, tableau de bord, et trois rôles utilisateurs (encadrant, logistique, préleveur) avec droits différenciés. Conçue et développée en autonomie, utilisée en conditions réelles.</p>
+        <div class="tags"><span class="tag">Next.js (App Router)</span><span class="tag">Supabase · RLS</span><span class="tag">PostgreSQL</span><span class="tag">Vercel</span><span class="tag">Cloudflare</span></div>
+        <div class="meta"><span>RÔLE · CONCEPTION + DEV</span><span>STATUT · EN PRODUCTION</span></div>
+        <!-- TODO: lien démo clean (zéro SIAAP) -->
+        <a href="#" class="plink">▶ VOIR LA DÉMO</a>
+      </article>
+
+      <div class="prow">
+        <article class="proj">
+          <h3>Seteweb</h3>
+          <p>Sites web sur mesure pour artisans et TPE : vitrines rapides, mobile-first, pensées pour la conversion. Réalisations dans le bâtiment (électricité, bardage / façade).</p>
+          <div class="tags"><span class="tag">HTML · CSS · JS</span><span class="tag">Netlify</span><span class="tag">Formspree</span></div>
+          <div class="meta"><span>RÔLE · CONCEPTION + DEV + LIVRAISON</span></div>
+        </article>
+        <article class="proj">
+          <h3>ArtisanScout</h3>
+          <p>Outil de prospection semi-autonome : scoring d'opportunités et données entreprises via API publique (SIRENE), conçu dans le respect du RGPD.</p>
+          <div class="tags"><span class="tag">FastAPI</span><span class="tag">Next.js</span><span class="tag">PostgreSQL</span></div>
+          <div class="meta"><span>RÔLE · CONCEPTION + DEV</span></div>
+        </article>
+      </div>
+
+      <div class="inv">
+        <h4 class="px">ÉQUIPEMENT</h4>
+        <div class="inv-grid">
+          <div class="inv-col"><h5>FRONT</h5><div class="chips"><span class="chip">Next.js</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Tailwind</span></div></div>
+          <div class="inv-col"><h5>BACK / DATA</h5><div class="chips"><span class="chip">Supabase</span><span class="chip">PostgreSQL</span><span class="chip">FastAPI</span><span class="chip">SQL</span></div></div>
+          <div class="inv-col"><h5>INFRA</h5><div class="chips"><span class="chip">Vercel</span><span class="chip">Cloudflare</span><span class="chip">Git</span><span class="chip">GitHub</span></div></div>
+          <div class="inv-col"><h5>DOMAINE</h5><div class="chips"><span class="chip dom">Traitement des eaux</span><span class="chip dom">Chimie</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section class="screen" id="screen-contact">
+      <button class="back px" data-back type="button">◀ RETOUR</button>
+      <h2 class="sc-h">ME CONTACTER</h2>
+      <div class="cgrid">
+        <!-- TODO: VOTRE_ID Formspree -->
+        <form action="https://formspree.io/f/VOTRE_ID" method="POST">
+          <div class="field"><label for="name">NOM</label><input type="text" id="name" name="name" required></div>
+          <div class="field"><label for="email">EMAIL</label><input type="email" id="email" name="email" required></div>
+          <div class="field"><label for="msg">MESSAGE</label><textarea id="msg" name="message" required></textarea></div>
+          <button type="submit" class="send">ENVOYER ▶</button>
+        </form>
+        <div class="reach">
+          <a href="https://www.linkedin.com/in/karim-s-37a510189" target="_blank" rel="noopener"><span class="k px">LINKEDIN</span> karim-s</a>
+          <!-- TODO: pseudo GitHub -->
+          <a href="https://github.com/karim-ops78" target="_blank" rel="noopener"><span class="k px">GITHUB</span> /karim-ops78</a>
+          <!-- TODO: email -->
+          <a href="mailto:VOTRE@EMAIL"><span class="k px">EMAIL</span> VOTRE@EMAIL</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer><div class="foot">INSERT COIN · © 2026 KARIM<br>CONSTRUIT À LA MAIN · HTML · CSS · JS</div></footer>
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var intro = document.getElementById('intro');
+  var started = false;
+
+  function enter(){
+    if(started) return; started = true;
+    if(reduce){ document.body.classList.add('entered'); window.scrollTo(0,0); return; }
+    intro.classList.add('zoom');
+    setTimeout(function(){ document.body.classList.add('entered'); window.scrollTo(0,0); }, 950);
+  }
+  document.getElementById('startBtn').addEventListener('click', enter);
+  intro.addEventListener('click', function(e){ if(e.target.id!=='startBtn') enter(); });
+  document.addEventListener('keydown', function(e){
+    if(!started && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); enter(); }
+  });
+
+  /* menu navigation */
+  var screens = {
+    menu: document.getElementById('screen-menu'),
+    about: document.getElementById('screen-about'),
+    projects: document.getElementById('screen-projects'),
+    contact: document.getElementById('screen-contact')
+  };
+  function show(key){
+    Object.keys(screens).forEach(function(k){ screens[k].classList.toggle('active', k===key); });
+    window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'});
+  }
+  document.querySelectorAll('.panel').forEach(function(p){
+    p.addEventListener('click', function(){ show(p.getAttribute('data-go')); });
+  });
+  document.querySelectorAll('[data-back]').forEach(function(b){
+    b.addEventListener('click', function(){ show('menu'); });
+  });
+  document.getElementById('homeBtn').addEventListener('click', function(e){ e.preventDefault(); show('menu'); });
+})();
+</script>
+</body>
+</html>
