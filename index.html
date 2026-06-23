@@ -1,496 +1,783 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Karim — Product Engineer · Full-Stack</title>
-<meta name="description" content="Product Engineer et développeur full-stack. Du terrain en traitement des eaux au logiciel en production. Next.js, Supabase, TypeScript. Disponible en remote." />
+<meta name="description" content="Product Engineer and full-stack developer. Domain expert (water treatment) turned builder. Next.js, Supabase, PostgreSQL. Shipping to production. Available remote." />
 
 <script type="application/ld+json">
-{
-  "@context":"https://schema.org","@type":"Person","name":"Karim",
-  "jobTitle":"Product Engineer · Full-Stack Developer",
-  "knowsAbout":["Next.js","React","TypeScript","Supabase","PostgreSQL","Traitement des eaux","Chimie analytique"],
-  "address":{"@type":"PostalAddress","addressRegion":"Île-de-France","addressCountry":"FR"}
-}
+{"@context":"https://schema.org","@type":"Person","name":"Karim","jobTitle":"Product Engineer · Full-Stack Developer","knowsAbout":["Next.js","React","TypeScript","Supabase","PostgreSQL","Role-Based Access Control","Water treatment","Analytical chemistry"],"address":{"@type":"PostalAddress","addressRegion":"Île-de-France","addressCountry":"FR"}}
 </script>
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1116'/%3E%3Ccircle cx='16' cy='18' r='6' fill='%23E6A24C'/%3E%3Cpath d='M4 18h24' stroke='%230E9E8C' stroke-width='2'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314181A'/%3E%3Ccircle cx='16' cy='18' r='6' fill='%2318B3A0'/%3E%3Cpath d='M4 18h24' stroke='%230E7F70' stroke-width='2'/%3E%3C/svg%3E" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Hanken+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Hanken+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --ink:#0E1116;
-  --display:"Space Grotesk",system-ui,sans-serif;
-  --body:"Hanken Grotesk",system-ui,sans-serif;
-  --mono:"Space Mono",ui-monospace,monospace;
-  --ar:"Noto Naskh Arabic",serif;
+  :root{
+    --paper:#F5F6F4;--paper-2:#EFF1EE;--ink:#14181A;--slate:#5E6A66;--line:#D6DAD5;
+    --teal:#0E7F70;--teal-bright:#18B3A0;--teal-wash:#E1EFEB;--maxw:1080px;
+    --display:"Space Grotesk",system-ui,sans-serif;--body:"Hanken Grotesk",system-ui,sans-serif;--mono:"Space Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px;}
 
-  /* phase accents */
-  --aube:#E0A18C;       /* rose aube */
-  --aube-2:#B9A6E6;     /* lavande */
-  --midi:#0E9E8C;       /* teal plein jour */
-  --maghreb:#E6A24C;    /* or couchant */
+  /* i18n toggling */
+  .tb.fr,.ti.fr{display:none;}
+  body.lang-fr .tb.en{display:none;} body.lang-fr .tb.fr{display:block;}
+  body.lang-fr .ti.en{display:none;} body.lang-fr .ti.fr{display:inline;}
 
-  --sun:#E6A24C;        /* couleur courante du soleil (modifiée par JS) */
-  --bar:rgba(14,17,22,.82);
-  --bar-fg:#EDE9E2;
-}
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{margin:0;font-family:var(--body);color:var(--ink);background:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-a{color:inherit;text-decoration:none;}
-.wrap{max-width:1080px;margin:0 auto;padding:0 22px;}
-.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;display:inline-flex;align-items:center;gap:.6em;}
-.eyebrow::before{content:"";width:22px;height:1px;background:currentColor;display:inline-block;}
-.ar{font-family:var(--ar);font-weight:500;}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);display:inline-flex;align-items:center;gap:.6em;}
+  
 
-/* ============ BOOT / INCEPTION ============ */
-.boot{position:fixed;inset:0;z-index:200;background:#0B0E13;display:flex;align-items:center;justify-content:center;padding:22px;transition:opacity .7s ease, visibility .7s;}
-body.booted .boot{opacity:0;visibility:hidden;pointer-events:none;}
-.editor{width:min(560px,100%);background:#11151C;border:1px solid #232B35;border-radius:9px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6);transition:transform .6s ease;}
-.editor-top{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid #1d2530;background:#0E1219;}
-.dot{width:11px;height:11px;border-radius:50%;}
-.d1{background:#E0605A;}.d2{background:#E6B25A;}.d3{background:#4FB477;}
-.editor-name{font-family:var(--mono);font-size:.74rem;color:#6E7A88;margin-left:8px;}
-.skip{margin-left:auto;font-family:var(--mono);font-size:.7rem;color:#5E6A78;background:none;border:1px solid #232B35;border-radius:3px;padding:4px 9px;cursor:pointer;}
-.skip:hover{color:#CFD6DE;border-color:#3a4554;}
-.code{font-family:var(--mono);font-size:.82rem;line-height:1.85;padding:20px 20px 24px;color:#C7D0DB;white-space:pre;overflow-x:auto;}
-.code .line{opacity:0;transform:translateY(4px);transition:opacity .35s, transform .35s;}
-.code .line.show{opacity:1;transform:none;}
-.code .c{color:#5E6A78;}.code .k{color:#B9A6E6;}.code .v{color:#5BC0B3;}.code .p{color:#E6B25A;}.code .s{color:#8FCF8F;}.code .f{color:#5BC0DE;}.code .ok{color:var(--maghreb);}
-.caret{display:inline-block;width:8px;height:1.05em;background:var(--midi);vertical-align:-2px;animation:blink 1s steps(1) infinite;}
-@keyframes blink{50%{opacity:0;}}
+  /* top bar */
+  header.bar{position:sticky;top:0;z-index:50;background:rgba(245,246,244,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .bar-in{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px;padding-right:64px;} .brand{display:flex;align-items:center;gap:12px;} nav.links{margin-left:0;}
+  .logo{font-family:var(--mono);font-weight:700;letter-spacing:.12em;font-size:.95rem;white-space:nowrap;}
+  .logo span{color:var(--teal);}
+  nav.links{display:flex;gap:24px;align-items:center;margin-left:auto;}
+  nav.links a{font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;color:var(--slate);transition:color .2s;}
+  nav.links a:hover{color:var(--ink);}
+  .controls{display:flex;align-items:center;gap:8px;}
+  .lang{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--slate);background:transparent;border:1px solid var(--line);border-radius:2px;padding:7px 10px;cursor:pointer;transition:border-color .2s,color .2s;}
+  .lang:hover{border-color:var(--teal);color:var(--teal);}
+  .arcade-cta{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--teal);background:var(--teal-wash);border:1px solid var(--teal);border-radius:2px;padding:7px 11px;cursor:pointer;transition:background .2s,transform .12s;white-space:nowrap;}
+  .arcade-cta:hover{background:var(--teal);color:var(--paper);transform:translateY(-1px);}
+  .btn{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;background:var(--ink);color:var(--paper);padding:9px 14px;border-radius:2px;border:1px solid var(--ink);transition:transform .15s,background .2s;white-space:nowrap;}
+  .btn:hover{background:var(--teal);border-color:var(--teal);transform:translateY(-1px);}
+  @media(max-width:860px){nav.links{display:none;} .bar-in{height:56px;}}
+  @media(max-width:430px){.btn.contact{display:none;}}
 
-/* ============ SUN-ARC NAV (sticky) ============ */
-header.nav{position:sticky;top:0;z-index:90;background:var(--bar);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08);transition:background .8s;}
-.nav-in{display:flex;align-items:center;gap:18px;height:62px;}
-.logo{font-family:var(--mono);font-weight:700;letter-spacing:.1em;font-size:.92rem;color:var(--bar-fg);white-space:nowrap;}
-.logo b{color:var(--sun);transition:color .8s;}
-.arc-holder{flex:1;position:relative;height:46px;min-width:0;}
-.arc-holder svg{width:100%;height:100%;overflow:visible;}
-.arc-path{fill:none;stroke:rgba(237,233,226,.18);stroke-width:1.4;}
-.arc-prog{fill:none;stroke:var(--sun);stroke-width:1.6;transition:stroke .8s;}
-.sun{fill:var(--sun);filter:drop-shadow(0 0 7px var(--sun));transition:fill .8s;}
-.station{cursor:pointer;}
-.station circle{fill:#0E1116;stroke:rgba(237,233,226,.4);stroke-width:1.4;transition:stroke .3s, fill .3s;}
-.station.active circle{stroke:var(--sun);fill:var(--sun);}
-.station:hover circle{stroke:var(--bar-fg);}
-.tip{position:absolute;transform:translate(-50%,8px);background:#11151C;border:1px solid #2a323d;border-radius:5px;padding:9px 12px;width:170px;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:5;}
-.station:hover + .tip, .station:focus + .tip, .tip.force{opacity:1;transform:translate(-50%,2px);}
-.tip .t-ph{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sun);}
-.tip .t-ar{font-family:var(--ar);font-size:.95rem;color:#cfd6de;}
-.tip .t-d{font-size:.78rem;color:#9aa3ad;margin-top:3px;line-height:1.35;}
-.nav .btn{font-family:var(--mono);font-size:.76rem;letter-spacing:.04em;background:var(--sun);color:#1a1206;font-weight:700;padding:9px 15px;border-radius:3px;white-space:nowrap;transition:background .8s,transform .15s;}
-.nav .btn:hover{transform:translateY(-1px);}
+  /* hero */
+  .hero{position:relative;padding:74px 0 56px;border-bottom:1px solid var(--line);
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:30px 30px;background-position:center top;}
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 0%,transparent 55%,var(--paper) 100%);}
+  .hero .wrap{position:relative;z-index:1;}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(2.4rem,7.6vw,4.4rem);line-height:1.0;letter-spacing:-.02em;margin:.5em 0 .32em;}
+  h1 .accent{color:var(--teal);}
+  .lede{font-size:clamp(1.05rem,2.5vw,1.28rem);color:var(--slate);max-width:44ch;margin:0 0 28px;}
+  .spec{border:1px solid var(--line);background:var(--paper-2);border-radius:3px;overflow:hidden;max-width:580px;}
+  .spec-row{display:grid;grid-template-columns:128px 1fr;font-family:var(--mono);font-size:.78rem;border-bottom:1px solid var(--line);}
+  .spec-row:last-child{border-bottom:0;}
+  .spec-k{padding:11px 14px;color:var(--slate);letter-spacing:.06em;text-transform:uppercase;font-size:.66rem;border-right:1px solid var(--line);background:var(--paper);display:flex;align-items:center;}
+  .spec-v{padding:11px 14px;display:flex;align-items:center;}
+  .spec-v .dot{color:var(--teal-bright);margin:0 .4em;}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;align-items:center;}
+  .btn.ghost{background:transparent;color:var(--ink);}
+  .btn.ghost:hover{background:var(--ink);color:var(--paper);}
+  .play-hint{font-family:var(--mono);font-size:.72rem;color:var(--slate);}
+  .play-hint b{color:var(--teal);cursor:pointer;border-bottom:1px solid var(--teal);}
 
-/* mobile phase pills */
-.pills{display:none;gap:6px;flex:1;}
-.pill{flex:1;text-align:center;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#9aa3ad;border:1px solid rgba(237,233,226,.16);border-radius:3px;padding:7px 2px;}
-.pill.active{color:#1a1206;background:var(--sun);border-color:var(--sun);font-weight:700;}
-@media(max-width:720px){
-  .arc-holder{display:none;}
-  .pills{display:flex;}
-  .logo{font-size:.82rem;}
-}
+  section{padding:70px 0;border-bottom:1px solid var(--line);}
+  .sec-head{margin-bottom:30px;}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(1.7rem,4.5vw,2.4rem);letter-spacing:-.015em;margin:.4em 0 0;line-height:1.05;}
+  .about p{font-size:1.06rem;max-width:62ch;margin:0 0 16px;}
+  .about strong{font-weight:600;}
 
-/* ============ HERO ============ */
-.hero{min-height:calc(100vh - 62px);display:flex;align-items:center;position:relative;background:radial-gradient(120% 90% at 50% -10%, #1b2236 0%, #0E1116 60%);color:#EDE9E2;overflow:hidden;}
-.hero .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(237,233,226,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(237,233,226,.05) 1px,transparent 1px);background-size:34px 34px;mask-image:radial-gradient(120% 80% at 50% 0%,#000 30%,transparent 75%);}
-.hero .wrap{position:relative;z-index:2;}
-.h-reveal{opacity:0;transform:translateY(18px);transition:opacity .8s ease, transform .8s ease;}
-body.booted .h-reveal{opacity:1;transform:none;}
-body.booted .h-reveal:nth-child(2){transition-delay:.1s;}
-body.booted .h-reveal:nth-child(3){transition-delay:.2s;}
-body.booted .h-reveal:nth-child(4){transition-delay:.3s;}
-h1{font-family:var(--display);font-weight:700;font-size:clamp(2.6rem,9vw,5rem);line-height:.96;letter-spacing:-.02em;margin:.45em 0 .3em;}
-h1 .sun-word{color:var(--maghreb);}
-.lede{font-size:clamp(1.05rem,2.4vw,1.3rem);color:#B7C0CB;max-width:40ch;margin:0 0 26px;}
-.daymap{display:flex;gap:0;border:1px solid rgba(237,233,226,.16);border-radius:5px;overflow:hidden;max-width:540px;margin-bottom:30px;}
-.daymap a{flex:1;padding:13px 12px;border-right:1px solid rgba(237,233,226,.12);transition:background .25s;}
-.daymap a:last-child{border-right:0;}
-.daymap a:hover{background:rgba(237,233,226,.05);}
-.daymap .dm-ph{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--sun);}
-.daymap .dm-ar{font-family:var(--ar);font-size:.9rem;color:#cfd6de;margin:1px 0 2px;}
-.daymap .dm-d{font-size:.74rem;color:#8b95a1;}
-.scroll-hint{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:#6E7A88;display:flex;align-items:center;gap:8px;}
-.scroll-hint::after{content:"";width:1px;height:22px;background:linear-gradient(#6E7A88,transparent);}
+  /* projects */
+  .proj{border:1px solid var(--line);border-radius:4px;background:var(--paper-2);padding:26px;margin-bottom:20px;transition:border-color .25s,transform .25s;}
+  .proj:hover{border-color:var(--teal);transform:translateY(-2px);}
+  .proj.feature{background:var(--ink);color:var(--paper);border-color:var(--ink);padding:32px 30px;}
+  .proj.feature h3{color:var(--paper);} .proj.feature .tag{border-color:rgba(245,246,244,.25);color:var(--paper);}
+  .proj.feature .proj-link{color:var(--teal-bright);} .proj.feature .pill{background:var(--teal);color:#06231e;}
+  .proj.feature .pcr b{color:var(--teal-bright);} .proj.feature .pcr{color:#C9D2CF;}
+  .pill{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;background:var(--teal-wash);color:var(--teal);padding:5px 9px;border-radius:2px;display:inline-block;margin-bottom:13px;font-weight:700;}
+  .proj h3{font-family:var(--display);font-weight:700;font-size:1.4rem;margin:0 0 14px;letter-spacing:-.01em;} .h3sub{display:block;font-family:var(--mono);font-weight:400;font-size:.74rem;letter-spacing:.04em;opacity:.65;margin-top:5px;}
+  .pcr{color:var(--slate);font-size:1.0rem;max-width:64ch;margin:0 0 9px;}
+  .pcr b{color:var(--ink);font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;margin-right:.5em;}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;}
+  .tag{font-family:var(--mono);font-size:.71rem;border:1px solid var(--line);color:var(--slate);padding:5px 10px;border-radius:2px;}
+  .proj-meta{font-family:var(--mono);font-size:.71rem;color:var(--slate);margin-top:14px;display:flex;flex-wrap:wrap;gap:18px;}
+  .proj.feature .proj-meta{color:#A9B4B0;}
+  .proj-link{font-family:var(--mono);font-size:.78rem;color:var(--teal);margin-top:16px;display:inline-block;border-bottom:1px solid currentColor;padding-bottom:1px;}
+  @media(min-width:760px){.proj-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;}.proj-row .proj{margin-bottom:0;}}
 
-/* ============ PHASE SECTIONS ============ */
-.phase{padding:90px 0;position:relative;}
-.phase .eyebrow{margin-bottom:6px;}
-.ph-title{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 8px;}
-.ph-title h2{font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,5vw,2.8rem);letter-spacing:-.015em;margin:0;line-height:1.02;}
-.ph-title .ar{font-size:1.6rem;opacity:.55;}
-.ph-sub{font-size:1.05rem;margin:0 0 40px;max-width:54ch;}
+  /* skills tiers */
+  .tier{margin-bottom:26px;}
+  .tier h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin:0 0 6px;}
+  .tier .tdesc{font-size:.92rem;color:var(--slate);margin:0 0 12px;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-family:var(--mono);font-size:.8rem;background:var(--paper-2);border:1px solid var(--line);padding:7px 12px;border-radius:2px;}
+  .chip.dom{border-color:var(--teal);color:var(--teal);}
+  .chip.learn{border-style:dashed;color:var(--slate);}
+  .subgrid{display:grid;grid-template-columns:1fr;gap:24px;margin-top:8px;}
+  @media(min-width:680px){.subgrid{grid-template-columns:1fr 1fr 1fr;}}
+  .subcol h5{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin:0 0 10px;}
 
-/* AUBE */
-.phase-aube{background:linear-gradient(180deg,#0E1116 0%,#221b33 28%,#5b4a63 70%,#caa090 100%);color:#F4ECE6;}
-.phase-aube .eyebrow,.phase-aube .ph-title .ar{color:var(--aube);}
-.phase-aube .ph-sub{color:#e9ddd5;}
-.timeline{border-left:1px solid rgba(244,236,230,.28);margin-left:6px;padding-left:24px;display:flex;flex-direction:column;gap:26px;}
-.tl-item{position:relative;}
-.tl-item::before{content:"";position:absolute;left:-30px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--aube);box-shadow:0 0 0 4px rgba(224,161,140,.18);}
-.tl-when{font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;color:#e6c8bb;}
-.tl-what{font-family:var(--display);font-weight:500;font-size:1.18rem;margin:3px 0 2px;}
-.tl-where{font-size:.95rem;color:#d8c6bd;}
+  /* arcade banner */
+  .arcade-band{border:1px solid var(--teal);background:var(--teal-wash);border-radius:5px;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+  .arcade-band .ab-t{font-family:var(--display);font-weight:700;font-size:1.2rem;margin:0 0 4px;}
+  .arcade-band .ab-d{font-size:.95rem;color:var(--slate);margin:0;}
+  .arcade-band .btn{background:var(--teal);border-color:var(--teal);}
 
-/* MIDI */
-.phase-midi{background:linear-gradient(180deg,#caa090 0%,#eaf3f6 16%,#ffffff 60%,#eef4f6 100%);color:var(--ink);}
-.phase-midi .eyebrow,.phase-midi .ph-title .ar{color:var(--midi);}
-.phase-midi .ph-sub{color:#42504c;}
-.proj{border:1px solid #d8e0de;border-radius:6px;background:#fff;padding:26px;margin-bottom:18px;transition:border-color .25s, transform .25s, box-shadow .25s;}
-.proj:hover{border-color:var(--midi);transform:translateY(-3px);box-shadow:0 14px 30px rgba(14,158,140,.1);}
-.proj.feature{background:var(--ink);color:#EDE9E2;border-color:var(--ink);padding:34px 30px;}
-.proj.feature .proj-desc{color:#C4CDD4;}
-.proj.feature .tag{border-color:rgba(237,233,226,.22);color:#cdd5da;}
-.proj.feature .proj-meta{color:#9aa6ac;}
-.pill-tag{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;background:rgba(14,158,140,.14);color:var(--midi);padding:5px 9px;border-radius:2px;font-weight:700;display:inline-block;margin-bottom:13px;}
-.proj.feature .pill-tag{background:var(--midi);color:#04241f;}
-.proj h3{font-family:var(--display);font-weight:700;font-size:1.4rem;margin:0 0 11px;letter-spacing:-.01em;}
-.proj-desc{color:#52605b;margin:0 0 17px;font-size:1.01rem;max-width:62ch;}
-.tags{display:flex;flex-wrap:wrap;gap:7px;}
-.tag{font-family:var(--mono);font-size:.71rem;border:1px solid #d8e0de;color:#5b6964;padding:5px 10px;border-radius:2px;}
-.proj-meta{font-family:var(--mono);font-size:.71rem;color:#6a7873;margin-top:15px;display:flex;flex-wrap:wrap;gap:18px;}
-.proj-meta b{letter-spacing:.06em;}
-.proj-link{font-family:var(--mono);font-size:.78rem;color:var(--midi);margin-top:16px;display:inline-block;border-bottom:1px solid currentColor;padding-bottom:1px;}
-.proj.feature .proj-link{color:#5BC0B3;}
-@media(min-width:760px){.proj-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}.proj-row .proj{margin-bottom:0;}}
-.stack-band{margin-top:42px;display:grid;grid-template-columns:1fr;gap:22px;}
-@media(min-width:680px){.stack-band{grid-template-columns:repeat(4,1fr);}}
-.stack-col h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#6a7873;margin:0 0 12px;}
-.chips{display:flex;flex-wrap:wrap;gap:7px;}
-.chip{font-family:var(--mono);font-size:.76rem;background:#fff;border:1px solid #d8e0de;padding:6px 11px;border-radius:2px;}
-.chip.dom{border-color:var(--midi);color:var(--midi);}
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:1fr;gap:34px;}
+  @media(min-width:760px){.contact-grid{grid-template-columns:1.1fr .9fr;}}
+  .field{margin-bottom:16px;}
+  label{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);display:block;margin-bottom:6px;}
+  input,textarea{width:100%;font-family:var(--body);font-size:1rem;color:var(--ink);background:var(--paper-2);border:1px solid var(--line);border-radius:3px;padding:12px 14px;transition:border-color .2s;}
+  input:focus,textarea:focus{outline:none;border-color:var(--teal);}
+  textarea{resize:vertical;min-height:120px;}
+  button.send{font-family:var(--mono);font-size:.82rem;letter-spacing:.04em;background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:13px 22px;border-radius:2px;cursor:pointer;transition:background .2s,transform .15s;}
+  button.send:hover{background:var(--teal);border-color:var(--teal);transform:translateY(-1px);}
+  .reach a{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:.9rem;padding:15px 0;border-bottom:1px solid var(--line);transition:color .2s;}
+  .reach a:hover{color:var(--teal);}
+  .reach a span.k{color:var(--slate);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;min-width:74px;}
 
-/* MAGHREB */
-.phase-maghreb{background:linear-gradient(180deg,#eef4f6 0%,#caa07a 14%,#8a4f3e 46%,#2a1d2e 100%);color:#F6ECE3;}
-.phase-maghreb .eyebrow,.phase-maghreb .ph-title .ar{color:var(--maghreb);}
-.phase-maghreb .ph-sub{color:#f1ddd0;}
-.contact-grid{display:grid;grid-template-columns:1fr;gap:34px;}
-@media(min-width:760px){.contact-grid{grid-template-columns:1.05fr .95fr;}}
-.field{margin-bottom:15px;}
-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#e9cdbd;display:block;margin-bottom:6px;}
-input,textarea{width:100%;font-family:var(--body);font-size:1rem;color:#F6ECE3;background:rgba(255,255,255,.07);border:1px solid rgba(246,236,227,.25);border-radius:4px;padding:12px 14px;transition:border-color .2s, background .2s;}
-input::placeholder,textarea::placeholder{color:#c9b3a6;}
-input:focus,textarea:focus{outline:none;border-color:var(--maghreb);background:rgba(255,255,255,.1);}
-textarea{resize:vertical;min-height:120px;}
-button.send{font-family:var(--mono);font-size:.82rem;letter-spacing:.04em;background:var(--maghreb);color:#2a1606;border:0;padding:13px 24px;border-radius:3px;cursor:pointer;font-weight:700;transition:transform .15s, filter .2s;}
-button.send:hover{transform:translateY(-1px);filter:brightness(1.06);}
-.reach a{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:.9rem;padding:15px 0;border-bottom:1px solid rgba(246,236,227,.18);transition:color .2s;}
-.reach a:hover{color:var(--maghreb);}
-.reach a span.k{color:#d9bcab;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;min-width:74px;}
+  footer{padding:40px 0 110px;}
+  .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:var(--mono);font-size:.74rem;color:var(--slate);}
 
-footer{background:#221826;color:#9b8a93;padding:34px 0 110px;}
-.foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:var(--mono);font-size:.73rem;}
+  :focus-visible{outline:2px solid var(--teal);outline-offset:3px;}
 
-.mobile-cta{position:fixed;bottom:0;left:0;right:0;z-index:95;display:none;padding:12px 18px calc(12px + env(safe-area-inset-bottom));background:rgba(34,24,38,.95);backdrop-filter:blur(8px);}
-.mobile-cta a{display:block;text-align:center;font-family:var(--mono);font-size:.85rem;letter-spacing:.05em;background:var(--maghreb);color:#2a1606;font-weight:700;padding:14px;border-radius:3px;}
-@media(max-width:720px){.mobile-cta{display:block;}}
+  #page{position:relative;z-index:1;background:var(--paper);}
+  #peel{position:fixed;inset:0;z-index:60;pointer-events:none;}
+  #peelZone{position:fixed;top:0;right:0;width:62px;height:62px;z-index:62;cursor:grab;touch-action:none;}
+  #peelZone:active{cursor:grabbing;}
+  #peelHint{position:fixed;top:10px;right:68px;z-index:62;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--slate);pointer-events:none;opacity:.8;transition:opacity .25s;}
+  #peelHint.hidden{opacity:0;}
 
-.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease;}
-.reveal.in{opacity:1;transform:none;}
-@media(prefers-reduced-motion:reduce){
-  .reveal,.h-reveal{opacity:1!important;transform:none!important;transition:none!important;}
-  html{scroll-behavior:auto;}
-  .code .line{opacity:1;transform:none;}
-}
-:focus-visible{outline:2px solid var(--midi);outline-offset:3px;}
+  .arcade-overlay{position:fixed;inset:0;z-index:1000;background:#0B0E13;display:none;}
+  .arcade-overlay.open{display:block;}
+  .arcade-frame{width:100%;height:100%;border:0;display:block;}
+  .arcade-exit{position:fixed;top:14px;right:14px;z-index:1001;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:#EDE9E2;background:rgba(18,16,31,.65);border:1px solid rgba(237,233,226,.32);border-radius:3px;padding:9px 13px;cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:border-color .2s,color .2s;}
+  .arcade-exit:hover{border-color:#34E0C4;color:#34E0C4;}
 </style>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Karim Sehil — Product Engineer · Full-Stack"/>
+<meta property="og:description" content="I ship production web apps end-to-end. Next.js · React · TypeScript · Supabase · PostgreSQL. Remote-first."/>
+<meta property="og:url" content="https://karimportfolio1.netlify.app"/>
+<meta property="og:image" content="https://karimportfolio1.netlify.app/og.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Karim Sehil — Product Engineer · Full-Stack"/>
+<meta name="twitter:image" content="https://karimportfolio1.netlify.app/og.png"/>
 </head>
-<body>
+<body class="lang-en">
+<div id="page">
 
-<!-- ============ BOOT / INCEPTION ============ -->
-<div class="boot" id="boot">
-  <div class="editor" id="editor">
-    <div class="editor-top">
-      <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
-      <span class="editor-name">karim.portfolio.js</span>
-      <button class="skip" id="skip" type="button">passer ▸</button>
-    </div>
-    <div class="code" id="code"><span class="line"><span class="c">// karim — séquence de build</span></span>
-<span class="line"><span class="k">const</span> <span class="v">journey</span> = {</span>
-<span class="line">  <span class="p">aube</span>:    <span class="s">"parcours"</span>,   <span class="c">// d'où je viens</span></span>
-<span class="line">  <span class="p">midi</span>:    <span class="s">"projets"</span>,    <span class="c">// ce que je construis</span></span>
-<span class="line">  <span class="p">maghreb</span>: <span class="s">"contact"</span>     <span class="c">// la suite</span></span>
-<span class="line">};</span>
-<span class="line"><span class="f">render</span>(<span class="v">journey</span>); <span class="ok">✦</span> <span class="caret"></span></span></div>
-  </div>
-</div>
+<header class="bar">
+  <div class="wrap bar-in">
+    <div class="brand"><a href="#top" class="logo">KARIM<span>.</span></a><button class="lang" id="langToggle" type="button">FR</button></div>
+    <nav class="links">
+      <a href="#profile"><span class="ti en">Profile</span><span class="ti fr">Profil</span></a>
+      <a href="#projects"><span class="ti en">Projects</span><span class="ti fr">Projets</span></a>
+      <a href="#skills"><span class="ti en">Skills</span><span class="ti fr">Compétences</span></a>
+      <a href="#contact"><span class="ti en">Contact</span><span class="ti fr">Contact</span></a>
+    </nav>
 
-<!-- ============ NAV ============ -->
-<header class="nav" id="nav">
-  <div class="wrap nav-in">
-    <a href="#top" class="logo">KARIM<b>.</b></a>
-
-    <!-- arc desktop -->
-    <div class="arc-holder" id="arcHolder">
-      <svg viewBox="0 0 300 46" preserveAspectRatio="none" id="arcSvg" aria-hidden="true">
-        <path class="arc-path" id="arcPath" d="M12,40 Q150,2 288,40"/>
-        <path class="arc-prog" id="arcProg" d="M12,40 Q150,2 288,40" stroke-dasharray="1 999"/>
-        <circle class="sun" id="sun" r="6" cx="12" cy="40"/>
-        <g id="stations"></g>
-      </svg>
-      <div class="tip" id="tip0"><div class="t-ph">Aube · <span class="t-ar ar">الفجر</span></div><div class="t-d">Le passé — mon parcours et mes formations</div></div>
-      <div class="tip" id="tip1"><div class="t-ph">Midi · <span class="t-ar ar">الظهر</span></div><div class="t-d">Le présent — les projets que je développe</div></div>
-      <div class="tip" id="tip2"><div class="t-ph">Maghreb · <span class="t-ar ar">المغرب</span></div><div class="t-d">La suite — travaillons ensemble</div></div>
-    </div>
-
-    <!-- pills mobile -->
-    <div class="pills" id="pills">
-      <a href="#parcours" class="pill" data-i="0">Aube</a>
-      <a href="#projets" class="pill" data-i="1">Midi</a>
-      <a href="#contact" class="pill" data-i="2">Maghreb</a>
-    </div>
-
-    <a href="#contact" class="btn">Me contacter</a>
   </div>
 </header>
 
-<!-- ============ HERO ============ -->
 <main id="top">
-<section class="hero">
-  <div class="grid-bg"></div>
+<section class="hero" style="border-bottom:1px solid var(--line);">
   <div class="wrap">
-    <span class="eyebrow h-reveal" style="color:var(--midi)">Product Engineer · Full-Stack</span>
-    <h1 class="h-reveal">Du laboratoire<br>au <span class="sun-word">code.</span></h1>
-    <p class="lede h-reveal">Je conçois et développe des produits web de bout en bout — du besoin métier réel jusqu'au déploiement en production. Ce site se construit sous vos yeux.</p>
+    <span class="eyebrow">Product Engineer · Full-Stack</span>
+    <h1>
+      <span class="tb en">From the lab floor<br>to <span class="accent">production code.</span></span>
+      <span class="tb fr">Du terrain<br>au <span class="accent">code en production.</span></span>
+    </h1>
+    <p class="lede tb en">I design and ship full-stack web products end to end — from the real-world problem to production. A domain expert turned builder.</p>
+    <p class="lede tb fr">Je conçois et je livre des produits web full-stack de bout en bout — du problème réel jusqu'à la production. Un profil métier devenu builder.</p>
 
-    <div class="daymap h-reveal">
-      <a href="#parcours"><div class="dm-ph">Aube</div><div class="dm-ar ar">الفجر</div><div class="dm-d">Parcours</div></a>
-      <a href="#projets"><div class="dm-ph">Midi</div><div class="dm-ar ar">الظهر</div><div class="dm-d">Projets</div></a>
-      <a href="#contact"><div class="dm-ph">Maghreb</div><div class="dm-ar ar">المغرب</div><div class="dm-d">Contact</div></a>
+    <div class="spec">
+      <div class="spec-row"><div class="spec-k"><span class="ti en">Role</span><span class="ti fr">Rôle</span></div><div class="spec-v">Product Engineer / Full-Stack</div></div>
+      <div class="spec-row"><div class="spec-k"><span class="ti en">Stack</span><span class="ti fr">Stack</span></div><div class="spec-v">Next.js<span class="dot">·</span>Supabase<span class="dot">·</span>TypeScript</div></div>
+      <div class="spec-row"><div class="spec-k"><span class="ti en">Availability</span><span class="ti fr">Dispo</span></div><div class="spec-v"><span class="ti en">Remote</span><span class="ti fr">Remote</span></div></div>
+      <div class="spec-row"><div class="spec-k"><span class="ti en">Location</span><span class="ti fr">Zone</span></div><div class="spec-v">Île-de-France, France</div></div>
     </div>
 
-    <div class="scroll-hint h-reveal">Suivez le soleil ↓</div>
-  </div>
-</section>
-
-<!-- ============ AUBE — PARCOURS ============ -->
-<section class="phase phase-aube" id="parcours">
-  <div class="wrap">
-    <span class="eyebrow reveal">Aube · <span class="ar">الفجر</span></span>
-    <div class="ph-title reveal"><h2>D'où je viens.</h2></div>
-    <p class="ph-sub reveal">Une formation en chimie et environnement, puis plusieurs années de terrain dans le traitement des eaux. C'est là que j'ai compris que les meilleurs outils naissent de ceux qui connaissent le métier — alors j'ai appris à les construire.</p>
-
-    <div class="timeline reveal">
-      <div class="tl-item">
-        <div class="tl-when">Aujourd'hui</div>
-        <div class="tl-what">Préleveur instrumentiste — traitement des eaux</div>
-        <div class="tl-where">Terrain, instrumentation, environnement laboratoire & process</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-when">Licence Pro</div>
-        <div class="tl-what">Maîtrise de l'Énergie et Environnement</div>
-        <div class="tl-where">Spécialisation énergie & environnement</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-when">DUT · 2018–2020</div>
-        <div class="tl-what">Génie Chimique — Génie des Procédés</div>
-        <div class="tl-where">IUT de Rambouillet</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-when">Licence · 2016–2018</div>
-        <div class="tl-what">Maths, Info, Physique et Ingénierie</div>
-        <div class="tl-where">CY Cergy Paris Université</div>
-      </div>
+    <div class="cta-row">
+      <a href="#projects" class="btn"><span class="ti en">View projects</span><span class="ti fr">Voir les projets</span></a>
+      <a href="#contact" class="btn ghost"><span class="ti en">Get in touch</span><span class="ti fr">Me contacter</span></a>
+      <span class="play-hint"><span class="ti en">Or </span><span class="ti fr">Ou </span><b id="arcadeOpen2">▶ <span class="ti en">play the arcade version</span><span class="ti fr">lance la version arcade</span></b></span>
     </div>
   </div>
 </section>
 
-<!-- ============ MIDI — PROJETS ============ -->
-<section class="phase phase-midi" id="projets">
+<!-- PROFILE -->
+<section id="profile" class="about">
   <div class="wrap">
-    <span class="eyebrow reveal">Midi · <span class="ar">الظهر</span></span>
-    <div class="ph-title reveal"><h2>Ce que je construis.</h2></div>
-    <p class="ph-sub reveal">Le présent : les produits que je développe en plein jour.</p>
+    <div class="sec-head">
+      <span class="eyebrow"><span class="ti en">Profile</span><span class="ti fr">Profil</span></span>
+      <h2><span class="ti en">Field technician turned builder.</span><span class="ti fr">Technicien de terrain devenu builder.</span></h2>
+    </div>
+    <p class="tb en">A background in <strong>chemistry and water-treatment operations</strong>, several years in the field — then I taught myself to build the software that the field actually needs. The insight: the best tools are built by people who understand the work.</p>
+    <p class="tb fr">Un parcours en <strong>chimie et exploitation du traitement des eaux</strong>, plusieurs années de terrain — puis j'ai appris à construire le logiciel dont le terrain a vraiment besoin. L'idée : les meilleurs outils sont construits par ceux qui connaissent le métier.</p>
+    <p class="tb en">I own features <strong>end to end</strong>: user research, data modeling, implementation, deployment. I'm not only a developer and not only a domain person — I'm both, and that's where I'm rare.</p>
+    <p class="tb fr">Je prends des fonctionnalités <strong>de bout en bout</strong> : recherche utilisateur, modélisation des données, développement, déploiement. Je ne suis pas qu'un dev ni qu'un profil métier — je suis les deux, et c'est là que je suis rare.</p>
+  </div>
+</section>
 
-    <article class="proj feature reveal">
-      <span class="pill-tag">Projet phare</span>
-      <h3>AppLabo — Digitalisation des opérations de laboratoire</h3>
-      <p class="proj-desc">Application web pour digitaliser les opérations d'un laboratoire : gestion des tournées de prélèvement, saisie et suivi des résultats d'analyse, tableau de bord, et trois rôles utilisateurs (encadrant, logistique, préleveur) avec droits différenciés. Conçue et développée en autonomie, utilisée en conditions réelles.</p>
-      <div class="tags">
-        <span class="tag">Next.js (App Router)</span><span class="tag">Supabase · RLS</span>
-        <span class="tag">PostgreSQL</span><span class="tag">Vercel</span><span class="tag">Cloudflare</span>
-      </div>
-      <div class="proj-meta"><span><b>RÔLE</b> &nbsp;Conception + développement</span><span><b>STATUT</b> &nbsp;En production</span></div>
-      <!-- TODO: lien démo clean (zéro SIAAP) -->
-      <a href="#" class="proj-link">Voir la démo →</a>
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="ti en">Projects</span><span class="ti fr">Projets</span></span>
+      <h2><span class="ti en">What I've built and shipped.</span><span class="ti fr">Ce que j'ai conçu et mis en prod.</span></h2>
+    </div>
+
+    <!-- Aquarys featured -->
+    <article class="proj feature">
+      <span class="pill"><span class="ti en">Main project</span><span class="ti fr">Projet principal</span></span>
+      <h3>Aquarys<span class="h3sub"><span class="ti en">laboratory operations platform</span><span class="ti fr">plateforme d'opérations de laboratoire</span></span></h3>
+      <p class="pcr tb en"><b>What it is</b>A web app that digitizes the daily operations of a water-treatment laboratory — replacing paper logs, phone coordination and scattered spreadsheets with one shared tool for the field, lab and logistics teams.</p>
+      <p class="pcr tb fr"><b>Ce que c'est</b>Une app web qui digitalise les opérations quotidiennes d'un laboratoire de traitement des eaux — elle remplace le papier, la coordination par téléphone et les fichiers Excel éparpillés par un outil partagé entre les équipes terrain, labo et logistique.</p>
+      <p class="pcr tb en"><b>What it does</b>Sampling rounds are planned and tracked, analysis results entered and followed in real time, reagent stock is visible at a glance, and each of the 9 user profiles across 3 teams sees exactly what their role needs.</p>
+      <p class="pcr tb fr"><b>Ce qu'elle fait</b>Les tournées de prélèvement sont planifiées et suivies, les résultats d'analyse saisis et suivis en temps réel, le stock de réactifs visible d'un coup d'œil, et chacun des 9 profils répartis sur 3 équipes voit exactement ce dont son rôle a besoin.</p>
+      <p class="pcr tb en"><b>How</b>Next.js (App Router, Server Components &amp; Actions) on Supabase / PostgreSQL — relational schema, authentication enforced by <strong>Row-Level Security</strong> and <strong>role-based access (RBAC)</strong>. Supabase was chosen to get auth + Postgres + RLS without a separate backend — shipping fast, solo.</p>
+      <p class="pcr tb fr"><b>Comment</b>Next.js (App Router, Server Components &amp; Actions) sur Supabase / PostgreSQL — schéma relationnel, authentification verrouillée par <strong>Row-Level Security</strong> et <strong>accès par rôles (RBAC)</strong>. J'ai choisi Supabase pour avoir auth + Postgres + RLS sans backend séparé — livrer vite, en solo.</p>
+      <p class="pcr tb en"><b>Result</b>Deployed to production (Vercel / Cloudflare) and <strong>used daily by multiple teams.</strong></p>
+      <p class="pcr tb fr"><b>Résultat</b>Déployé en production (Vercel / Cloudflare) et <strong>utilisé au quotidien par plusieurs équipes.</strong></p>
+      <div class="tags"><span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">Supabase</span><span class="tag">PostgreSQL</span><span class="tag">RLS / RBAC</span><span class="tag">Vercel</span><span class="tag">Cloudflare</span></div>
+      <a href="https://applabo.vercel.app" target="_blank" rel="noopener" class="proj-link"><span class="ti en">View live demo →</span><span class="ti fr">Voir la démo en ligne →</span></a>
     </article>
 
     <div class="proj-row">
-      <article class="proj reveal">
-        <h3>Seteweb</h3>
-        <p class="proj-desc">Sites web sur mesure pour artisans et TPE : vitrines rapides, mobile-first, pensées pour la conversion. Réalisations dans le bâtiment (électricité, bardage / façade).</p>
-        <div class="tags"><span class="tag">HTML · CSS · JS</span><span class="tag">Netlify</span><span class="tag">Formspree</span></div>
-        <div class="proj-meta"><span><b>RÔLE</b> &nbsp;Conception + dev + livraison</span></div>
+      <article class="proj">
+        <h3>SideQuest AI</h3>
+        <p class="pcr tb en">A personal app that helps gamers <strong>decide which game to launch</strong> from their library — no more decision paralysis. Same technical base as Aquarys.</p>
+        <p class="pcr tb fr">Une app perso qui aide les joueurs à <strong>décider quel jeu lancer</strong> dans leur bibliothèque — fini l'indécision. Même base technique qu'Aquarys.</p>
+        <div class="tags"><span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span></div>
+        <a href="https://github.com/karim-ops78/sidequest" target="_blank" rel="noopener" class="proj-link"><span class="ti en">View on GitHub →</span><span class="ti fr">Voir sur GitHub →</span></a>
       </article>
-      <article class="proj reveal">
-        <h3>ArtisanScout</h3>
-        <p class="proj-desc">Outil de prospection semi-autonome : scoring d'opportunités et données entreprises via API publique (SIRENE), conçu dans le respect du RGPD.</p>
-        <div class="tags"><span class="tag">FastAPI</span><span class="tag">Next.js</span><span class="tag">PostgreSQL</span></div>
-        <div class="proj-meta"><span><b>RÔLE</b> &nbsp;Conception + développement</span></div>
+      <article class="proj">
+        <h3>CarShyne</h3>
+        <p class="pcr tb en">Co-founded an <strong>express car-care cleaning-kit brand</strong> (product + brand identity). I advised on the website.</p>
+        <p class="pcr tb fr">Co-création d'une <strong>marque de kits de nettoyage auto express</strong> (produit + identité de marque). Conseil technique sur le site.</p>
+        <div class="tags"><span class="tag">Brand</span><span class="tag">E-commerce</span></div>
+        <a href="https://www.carshyne.com" target="_blank" rel="noopener" class="proj-link"><span class="ti en">Visit carshyne.com →</span><span class="ti fr">Voir carshyne.com →</span></a>
       </article>
-    </div>
-
-    <div class="stack-band reveal">
-      <div class="stack-col"><h4>Front-end</h4><div class="chips"><span class="chip">Next.js</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Tailwind</span></div></div>
-      <div class="stack-col"><h4>Back & Données</h4><div class="chips"><span class="chip">Supabase</span><span class="chip">PostgreSQL</span><span class="chip">FastAPI</span><span class="chip">SQL</span></div></div>
-      <div class="stack-col"><h4>Infra & Outils</h4><div class="chips"><span class="chip">Vercel</span><span class="chip">Cloudflare</span><span class="chip">Git</span><span class="chip">GitHub</span></div></div>
-      <div class="stack-col"><h4>Domaine</h4><div class="chips"><span class="chip dom">Traitement des eaux</span><span class="chip dom">Chimie analytique</span></div></div>
     </div>
   </div>
 </section>
 
-<!-- ============ MAGHREB — CONTACT ============ -->
-<section class="phase phase-maghreb" id="contact">
+<!-- SKILLS -->
+<section id="skills">
   <div class="wrap">
-    <span class="eyebrow reveal">Maghreb · <span class="ar">المغرب</span></span>
-    <div class="ph-title reveal"><h2>La suite.</h2></div>
-    <p class="ph-sub reveal">Un poste, un projet, une question ? Écrivez-moi.</p>
+    <div class="sec-head">
+      <span class="eyebrow"><span class="ti en">Skills</span><span class="ti fr">Compétences</span></span>
+      <h2><span class="ti en">Engineering toolkit.</span><span class="ti fr">Boîte à outils.</span></h2>
+    </div>
 
-    <div class="contact-grid reveal">
-      <!-- TODO: VOTRE_ID Formspree -->
-      <form action="https://formspree.io/f/VOTRE_ID" method="POST">
-        <div class="field"><label for="name">Nom</label><input type="text" id="name" name="name" required></div>
-        <div class="field"><label for="email">Email</label><input type="email" id="email" name="email" required></div>
-        <div class="field"><label for="msg">Message</label><textarea id="msg" name="message" required></textarea></div>
-        <button type="submit" class="send">Envoyer le message</button>
-      </form>
+    <div class="tier">
+      <h4><span class="ti en">Core — daily</span><span class="ti fr">Cœur — au quotidien</span></h4>
+      <p class="tdesc"><span class="ti en">What I build production apps with.</span><span class="ti fr">Ce avec quoi je construis des apps en prod.</span></p>
+      <div class="chips">
+        <span class="chip">TypeScript</span><span class="chip">JavaScript</span><span class="chip">React</span><span class="chip">Next.js (App Router)</span><span class="chip">Server Components / Actions</span><span class="chip">Tailwind CSS</span><span class="chip">Supabase</span><span class="chip">PostgreSQL</span><span class="chip">SQL</span><span class="chip">REST APIs</span><span class="chip">Node.js</span><span class="chip">Auth · RLS · RBAC</span><span class="chip">Git / GitHub</span><span class="chip">Vercel · Netlify · Cloudflare</span>
+      </div>
+    </div>
+
+    <div class="tier">
+      <h4><span class="ti en">Regular practice</span><span class="ti fr">Pratique régulière</span></h4>
+      <p class="tdesc"><span class="ti en">Comfortable, used across real projects.</span><span class="ti fr">À l'aise, utilisé sur de vrais projets.</span></p>
+      <div class="chips">
+        <span class="chip">Relational data modeling</span><span class="chip">Third-party API integration</span><span class="chip">AI-assisted dev (Claude Code, Codex)</span><span class="chip">PowerShell</span><span class="chip">VirtualBox</span><span class="chip">CI/CD (Vercel/Netlify)</span><span class="chip">Responsive / mobile-first</span><span class="chip">SEO (schema.org)</span>
+      </div>
+    </div>
+
+    <div class="tier">
+      <h4><span class="ti en">Currently leveling up</span><span class="ti fr">En cours d'apprentissage</span></h4>
+      <p class="tdesc"><span class="ti en">On my roadmap — shown honestly.</span><span class="ti fr">Sur ma feuille de route — affiché honnêtement.</span></p>
+      <div class="chips">
+        <span class="chip learn">Automated testing</span><span class="chip learn">Docker</span><span class="chip learn">System design</span>
+      </div>
+    </div>
+
+    <div class="subgrid">
+      <div class="subcol">
+        <h5><span class="ti en">Product</span><span class="ti fr">Produit</span></h5>
+        <div class="chips"><span class="chip">User research</span><span class="chip">MVP scoping</span><span class="chip">End-to-end delivery</span><span class="chip">Iteration</span></div>
+      </div>
+      <div class="subcol">
+        <h5><span class="ti en">Domain</span><span class="ti fr">Domaine</span></h5>
+        <div class="chips"><span class="chip dom">Water treatment</span><span class="chip dom">Analytical chemistry</span><span class="chip dom">Lab operations</span></div>
+      </div>
+      <div class="subcol">
+        <h5><span class="ti en">Languages</span><span class="ti fr">Langues</span></h5>
+        <div class="chips"><span class="chip">French — native</span><span class="chip">Arabic — native</span><span class="chip">English — B1+ (professional)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCADE BAND -->
+<section>
+  <div class="wrap">
+    <div class="arcade-band">
+      <div>
+        <p class="ab-t"><span class="ti en">There's a playable version of this site 🎮</span><span class="ti fr">Il existe une version jouable de ce site 🎮</span></p>
+        <p class="ab-d"><span class="ti en">Same content, pixel-art / retro-game style. For the curious.</span><span class="ti fr">Même contenu, en pixel-art façon jeu rétro. Pour les curieux.</span></p>
+      </div>
+      <button class="btn" id="arcadeOpen3" type="button">▶ <span class="ti en">Launch arcade mode</span><span class="ti fr">Lancer le mode arcade</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Contact</span>
+      <h2><span class="ti en">Let's build something.</span><span class="ti fr">Construisons quelque chose.</span></h2>
+    </div>
+    <div class="contact-grid">
+      <div class="cta-card"><a class="send" href="mailto:karimchlef02@gmail.com?subject=Hello%20Karim"><span class="ti en">✉ Email me</span><span class="ti fr">✉ M'écrire</span></a></div>
       <div class="reach">
-        <a href="https://www.linkedin.com/in/karim-s-37a510189" target="_blank" rel="noopener"><span class="k">LinkedIn</span> karim-s</a>
-        <!-- TODO: pseudo GitHub -->
+        <a href="https://www.linkedin.com/in/karim-sehil" target="_blank" rel="noopener"><span class="k">LinkedIn</span> karim-sehil</a>
         <a href="https://github.com/karim-ops78" target="_blank" rel="noopener"><span class="k">GitHub</span> /karim-ops78</a>
-        <!-- TODO: email -->
-        <a href="mailto:VOTRE@EMAIL"><span class="k">Email</span> VOTRE@EMAIL</a>
+        <a href="mailto:karimchlef02@gmail.com"><span class="k">Email</span> karimchlef02@gmail.com</a>
       </div>
     </div>
   </div>
 </section>
 </main>
 
-<footer><div class="wrap foot"><span>© 2026 Karim</span><span>Construit à la main · HTML · CSS · JS</span></div></footer>
-<div class="mobile-cta"><a href="#contact">Me contacter</a></div>
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 Karim</span>
+    <span><span class="ti en">Hand-built · HTML · CSS · JS</span><span class="ti fr">Construit à la main · HTML · CSS · JS</span></span>
+  </div>
+</footer>
+
+</div><!--/page-->
+<svg id="peel" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
+<div id="peelZone" title="Tear / déchire"></div>
+<div id="peelHint"><span class="ti en">▷ tear the page</span><span class="ti fr">▷ déchire la page</span></div>
+<script>
+  // language toggle
+  (function(){
+    var btn=document.getElementById('langToggle');
+    function setLang(l){
+      document.body.classList.toggle('lang-fr', l==='fr');
+      document.documentElement.lang = l;
+      btn.textContent = l==='fr' ? 'EN' : 'FR';
+    }
+    btn.addEventListener('click', function(){
+      setLang(document.body.classList.contains('lang-fr') ? 'en' : 'fr');
+    });
+  })();
+</script>
+<script>
+(function(){
+  var svg=document.getElementById('peel'), zone=document.getElementById('peelZone'), hint=document.getElementById('peelHint');
+  var SEG=20, jr=[]; for(var s0=0;s0<=SEG;s0++){ var v=Math.sin((s0+1)*53.17)*43758.5453; jr.push(v-Math.floor(v)); }
+  var idle=0.06, p=idle, target=idle, dragging=false, sx=0, sy=0, raf=null;
+  function grid(vw,vh){ var s=''; var x,y; for(x=vw-1;x>vw-320&&x>0;x-=26){ s+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="'+vh+'" stroke="#34E0C4" stroke-opacity="0.07"/>'; } for(y=0;y<320&&y<vh;y+=26){ s+='<line x1="'+(vw-320)+'" y1="'+y+'" x2="'+vw+'" y2="'+y+'" stroke="#34E0C4" stroke-opacity="0.07"/>'; } return s; }
+  function build(){
+    var vw=innerWidth, vh=innerHeight;
+    svg.setAttribute('width',vw); svg.setAttribute('height',vh); svg.setAttribute('viewBox','0 0 '+vw+' '+vh);
+    var tx=vw - p*vw*1.18, ry=p*vh*1.18;
+    var nx=ry, ny=-(vw-tx), nl=Math.hypot(nx,ny)||1; nx/=nl; ny/=nl;
+    var amp=6+p*48, pts=[], i;
+    for(i=0;i<=SEG;i++){ var t=i/SEG, x=tx+(vw-tx)*t, y=ry*t, o=(i===0||i===SEG)?0:(jr[i]-0.5)*2*amp; pts.push([x+nx*o, y+ny*o]); }
+    var line=pts.map(function(q){return q[0].toFixed(1)+' '+q[1].toFixed(1);}).join(' L ');
+    var reveal='M '+tx.toFixed(1)+' 0 L '+line+' L '+vw+' '+ry.toFixed(1)+' L '+vw+' 0 Z';
+    var fs1=Math.max(7,Math.min(22,p*42)).toFixed(0), fs2=Math.max(6,Math.min(12,p*22)).toFixed(0);
+    svg.innerHTML=
+      '<defs><clipPath id="rev"><path d="'+reveal+'"/></clipPath>'+
+      '<filter id="sh"><feDropShadow dx="-3" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.5"/></filter></defs>'+
+      '<g clip-path="url(#rev)"><rect x="0" y="0" width="'+vw+'" height="'+vh+'" fill="#0B0E13"/>'+grid(vw,vh)+
+        '<text x="'+(vw-12)+'" y="'+(ry*0.55).toFixed(0)+'" text-anchor="end" font-family="monospace" font-weight="bold" fill="#34E0C4" font-size="'+fs1+'" letter-spacing="2">PRESS START</text>'+
+        '<text x="'+(vw-12)+'" y="'+(ry*0.55-12).toFixed(0)+'" text-anchor="end" font-family="monospace" fill="#7B86A0" font-size="'+fs2+'" letter-spacing="3">KARIM.EXE</text></g>'+
+      '<path d="M '+tx.toFixed(1)+' 0 L '+line+' L '+vw+' '+ry.toFixed(1)+'" fill="none" stroke="#0B0E13" stroke-opacity="0.5" stroke-width="6" clip-path="url(#rev)"/>'+
+      '<path d="M '+tx.toFixed(1)+' 0 L '+line+' L '+vw+' '+ry.toFixed(1)+'" fill="none" stroke="#ffffff" stroke-width="2" filter="url(#sh)"/>';
+  }
+  function anim(){ p+=(target-p)*0.22; if(Math.abs(target-p)<0.003){p=target;build();raf=null;return;} build(); raf=requestAnimationFrame(anim); }
+  function settle(t){ target=t; if(!raf) raf=requestAnimationFrame(anim); }
+  function tear(){ if(window.openArcade){ p=idle; build(); window.openArcade(); setTimeout(function(){hint.classList.remove('hidden');},500);} else { settle(idle); } }
+  build();
+  zone.addEventListener('pointerdown',function(e){ dragging=true; sx=e.clientX; sy=e.clientY; try{zone.setPointerCapture(e.pointerId);}catch(_){}; hint.classList.add('hidden'); if(raf){cancelAnimationFrame(raf);raf=null;} e.preventDefault(); });
+  window.addEventListener('pointermove',function(e){ if(!dragging) return; var dx=innerWidth-e.clientX, dy=e.clientY; p=Math.max(idle,Math.min(1,(dx+dy)/(innerWidth+innerHeight)*2.0)); build(); });
+  window.addEventListener('pointerup',function(e){ if(!dragging) return; dragging=false; try{zone.releasePointerCapture(e.pointerId);}catch(_){}; var moved=Math.abs(e.clientX-sx)+Math.abs(e.clientY-sy); if(moved<6 || p>0.42){ tear(); } else { settle(idle); setTimeout(function(){hint.classList.remove('hidden');},350);} });
+  window.addEventListener('resize',build);
+})();
+</script>
+<div class="arcade-overlay" id="arcadeOverlay">
+  <button class="arcade-exit" id="arcadeExit" type="button">✕ back to site / retour au site</button>
+  <iframe class="arcade-frame" id="arcade" title="Arcade mode — Karim's portfolio"></iframe>
+</div>
+<script>
+(function(){
+  var GAME = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KARIM.EXE — Product Engineer · Full-Stack</title>
+<meta name="description" content="Product Engineer et développeur full-stack. Du terrain en traitement des eaux au logiciel en production. Next.js, Supabase, TypeScript. Disponible en remote." />
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Karim","jobTitle":"Product Engineer · Full-Stack Developer","knowsAbout":["Next.js","React","TypeScript","Supabase","PostgreSQL","Traitement des eaux","Chimie analytique"],"address":{"@type":"PostalAddress","addressRegion":"Île-de-France","addressCountry":"FR"}}
+<\/script>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%2312101F'/%3E%3Crect x='3' y='3' width='10' height='7' fill='%2334E0C4'/%3E%3Crect x='6' y='11' width='4' height='2' fill='%23F2B441'/%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#12101F; --panel:#1B1830; --panel-2:#232043;
+  --teal:#34E0C4; --amber:#F2B441; --magenta:#E0567E; --grey:#7B86A0;
+  --cream:#F3ECDE; --line:#34315A;
+  --px:"Press Start 2P", system-ui, sans-serif;
+  --term:"VT323", ui-monospace, monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--bg);color:var(--cream);font-family:var(--term);font-size:1.18rem;line-height:1.35;overflow-x:hidden;-webkit-font-smoothing:none;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;}
+.px{font-family:var(--px);line-height:1.6;}
+
+/* scanlines / CRT overlay */
+.crt{position:fixed;inset:0;z-index:300;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.16) 3px,rgba(0,0,0,0) 4px);mix-blend-mode:multiply;}
+.crt::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 120% at 50% 50%,transparent 62%,rgba(0,0,0,.45) 100%);}
+
+/* ============ INTRO / TITLE SCREEN ============ */
+#intro{position:fixed;inset:0;z-index:200;background:#0C0A16;display:flex;align-items:center;justify-content:center;transition:opacity .5s ease;}
+.scene-wrap{width:min(760px,100%);padding:18px;text-align:center;}
+.titlebar{font-family:var(--px);font-size:clamp(.85rem,3.6vw,1.4rem);color:var(--teal);letter-spacing:.04em;margin-bottom:14px;text-shadow:0 3px 0 #0a3d36;}
+.titlebar small{color:var(--amber);}
+.scene{width:100%;height:auto;display:block;image-rendering:pixelated;transform-origin:46.7% 38%;will-change:transform;border:2px solid #2a2740;}
+#intro.diving .scene{animation:dive 1.5s cubic-bezier(.5,0,.85,1) forwards;}
+#intro.diving .titlebar,#intro.diving .startbar{animation:fadeq .35s ease forwards;}
+@keyframes dive{0%{transform:scale(1);}26%{transform:scale(1.55);}100%{transform:scale(13);}}
+@keyframes fadeq{to{opacity:0;}}
+#codeScroll{animation:codescroll 5.5s linear infinite;}
+@keyframes codescroll{from{transform:translateY(0);}to{transform:translateY(-40px);}}
+#flash{position:fixed;inset:0;z-index:250;pointer-events:none;opacity:0;background:radial-gradient(circle at 46.7% 38%, #e8fffb 0%, #34e0c4 26%, rgba(52,224,196,0) 62%);}
+#flash.on{opacity:1;transition:opacity .55s ease-in;}
+#flash.off{opacity:0;transition:opacity .7s ease-out;}
+.startbar{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.press{font-family:var(--px);font-size:clamp(.7rem,3vw,1rem);color:var(--cream);animation:blink 1.05s steps(1) infinite;}
+@keyframes blink{50%{opacity:.15;}}
+.startbtn{font-family:var(--px);font-size:.72rem;color:#0a2a25;background:var(--teal);border:0;padding:14px 22px;box-shadow:0 5px 0 #15a98f;transition:transform .08s, box-shadow .08s;}
+.startbtn:active{transform:translateY(4px);box-shadow:0 1px 0 #15a98f;}
+.hintkey{font-family:var(--term);color:var(--grey);font-size:1rem;}
+
+/* ============ GAME / PORTFOLIO ============ */
+#game{display:none;min-height:100vh;background:radial-gradient(130% 90% at 50% 0%, #15233a 0%, var(--bg) 60%);}
+body.entered #game{display:block;animation:emerge .65s ease both;}
+body.entered #intro{display:none;}
+@keyframes emerge{from{opacity:0;transform:scale(1.06);}to{opacity:1;transform:none;}}
+
+.hud{position:sticky;top:0;z-index:60;background:rgba(12,10,22,.9);backdrop-filter:blur(6px);border-bottom:2px solid var(--line);}
+.hud-in{max-width:1080px;margin:0 auto;padding:0 18px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.hud .name{font-family:var(--px);font-size:.72rem;color:var(--teal);}
+.hud .name b{color:var(--amber);}
+.hud .coin{font-family:var(--px);font-size:.6rem;color:var(--grey);}
+@media(max-width:560px){.hud .coin{display:none;}}
+
+.screenwrap{max-width:1080px;margin:0 auto;padding:30px 18px 120px;}
+
+/* menu screen */
+.menu-title{font-family:var(--px);font-size:clamp(.8rem,3.4vw,1.15rem);color:var(--cream);text-align:center;margin:18px 0 6px;}
+.menu-sub{text-align:center;color:var(--grey);font-size:1.25rem;margin-bottom:30px;}
+.menu-sub b{color:var(--teal);}
+.panels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:720px){.panels{grid-template-columns:1fr;}}
+.panel{position:relative;background:var(--panel);border:2px solid var(--line);padding:26px 20px 22px;text-align:center;cursor:pointer;overflow:hidden;transition:transform .12s, border-color .2s, background .2s;}
+.panel::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(52,224,196,.05) 4px);opacity:0;transition:opacity .2s;}
+.panel:hover,.panel:focus-visible{transform:translateY(-4px);border-color:var(--teal);background:var(--panel-2);outline:none;}
+.panel:hover::before{opacity:1;}
+.panel .ico{width:64px;height:64px;margin:0 auto 16px;image-rendering:pixelated;}
+.panel .p-no{font-family:var(--px);font-size:.55rem;color:var(--amber);margin-bottom:10px;}
+.panel .p-label{font-family:var(--px);font-size:.8rem;color:var(--cream);margin-bottom:12px;}
+.panel .p-blurb{color:var(--grey);font-size:1.15rem;min-height:2.6em;}
+.panel .p-go{font-family:var(--px);font-size:.55rem;color:var(--teal);margin-top:14px;opacity:0;transition:opacity .2s;}
+.panel:hover .p-go,.panel:focus-visible .p-go{opacity:1;}
+
+/* sub-screens */
+.screen{display:none;}
+.screen.active{display:block;animation:slidein .35s ease;}
+@keyframes slidein{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:none;}}
+.back{font-family:var(--px);font-size:.62rem;color:var(--amber);background:var(--panel);border:2px solid var(--line);padding:11px 15px;margin-bottom:26px;transition:border-color .2s,transform .08s;}
+.back:hover{border-color:var(--amber);}
+.back:active{transform:translateY(2px);}
+.sc-h{font-family:var(--px);font-size:clamp(.85rem,3.6vw,1.2rem);color:var(--teal);margin:0 0 22px;text-shadow:0 3px 0 #0a3d36;}
+
+/* RPG sheet (qui suis-je) */
+.rpg{display:grid;grid-template-columns:1fr;gap:22px;}
+@media(min-width:760px){.rpg{grid-template-columns:1fr 1.2fr;}}
+.sheet{background:var(--panel);border:2px solid var(--line);padding:22px;}
+.sheet .pl{font-family:var(--px);font-size:.7rem;color:var(--amber);margin-bottom:18px;}
+.stat{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:1.2rem;}
+.stat:last-child{border-bottom:0;}
+.stat .sk{color:var(--grey);font-family:var(--px);font-size:.52rem;letter-spacing:.04em;padding-top:3px;}
+.stat .sv{color:var(--cream);text-align:right;}
+.bio p{font-size:1.25rem;color:#d7d1c5;margin:0 0 16px;}
+.bio p b{color:var(--teal);}
+.quests{margin-top:8px;}
+.quests h4{font-family:var(--px);font-size:.6rem;color:var(--amber);margin:0 0 14px;}
+.quest{display:flex;gap:10px;align-items:baseline;font-size:1.18rem;padding:6px 0;color:#cfc9bd;}
+.quest .star{color:var(--teal);}
+
+/* projects */
+.proj{background:var(--panel);border:2px solid var(--line);padding:24px;margin-bottom:16px;transition:border-color .2s, transform .12s;}
+.proj:hover{border-color:var(--teal);transform:translateY(-3px);}
+.proj.boss{border-color:var(--amber);background:linear-gradient(180deg,#241a33,#1B1830);}
+.proj .ptag{font-family:var(--px);font-size:.52rem;color:var(--amber);margin-bottom:14px;}
+.proj h3{font-family:var(--px);font-size:.82rem;color:var(--cream);margin:0 0 14px;line-height:1.5;}
+.proj p{color:#cfc9bd;font-size:1.2rem;margin:0 0 16px;}
+.tags{display:flex;flex-wrap:wrap;gap:7px;}
+.tag{font-family:var(--term);font-size:1.02rem;border:1px solid var(--line);color:var(--grey);padding:3px 10px;}
+.proj .meta{font-family:var(--px);font-size:.5rem;color:var(--grey);margin-top:16px;display:flex;flex-wrap:wrap;gap:16px;}
+.proj .plink{font-family:var(--px);font-size:.56rem;color:var(--teal);margin-top:16px;display:inline-block;}
+.proj .plink:hover{color:var(--amber);}
+@media(min-width:760px){.prow{display:grid;grid-template-columns:1fr 1fr;gap:16px;}.prow .proj{margin-bottom:0;}}
+.inv{margin-top:30px;background:var(--panel);border:2px solid var(--line);padding:22px;}
+.inv h4{font-family:var(--px);font-size:.6rem;color:var(--amber);margin:0 0 16px;}
+.inv-grid{display:grid;grid-template-columns:1fr;gap:18px;}
+@media(min-width:620px){.inv-grid{grid-template-columns:repeat(4,1fr);}}
+.inv-col h5{font-family:var(--px);font-size:.46rem;color:var(--grey);margin:0 0 10px;letter-spacing:.04em;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{font-family:var(--term);font-size:1.05rem;background:var(--panel-2);border:1px solid var(--line);padding:3px 9px;}
+.chip.dom{border-color:var(--teal);color:var(--teal);}
+
+/* contact */
+.cgrid{display:grid;grid-template-columns:1fr;gap:30px;}
+@media(min-width:760px){.cgrid{grid-template-columns:1.05fr .95fr;}}
+.field{margin-bottom:15px;}
+label{font-family:var(--px);font-size:.5rem;color:var(--grey);display:block;margin-bottom:8px;letter-spacing:.04em;}
+input,textarea{width:100%;font-family:var(--term);font-size:1.2rem;color:var(--cream);background:var(--panel);border:2px solid var(--line);padding:11px 13px;transition:border-color .2s;}
+input:focus,textarea:focus{outline:none;border-color:var(--teal);}
+textarea{resize:vertical;min-height:120px;}
+.send{font-family:var(--px);font-size:.66rem;color:#0a2a25;background:var(--teal);border:0;padding:14px 22px;box-shadow:0 5px 0 #15a98f;transition:transform .08s, box-shadow .08s;}
+.send:active{transform:translateY(4px);box-shadow:0 1px 0 #15a98f;}
+.reach a{display:flex;align-items:center;gap:12px;font-size:1.2rem;padding:14px 0;border-bottom:1px solid var(--line);transition:color .2s;}
+.reach a:hover{color:var(--teal);}
+.reach a .k{font-family:var(--px);font-size:.48rem;color:var(--amber);min-width:88px;}
+
+footer{border-top:2px solid var(--line);margin-top:40px;padding:24px 18px;text-align:center;}
+.foot{font-family:var(--px);font-size:.52rem;color:var(--grey);line-height:1.8;}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;}
+  #codeScroll{animation:none!important;}
+  .scene{transition:none!important;}
+  html{scroll-behavior:auto;}
+}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;}
+.langG{font-family:var(--px);font-size:.55rem;color:var(--amber);background:var(--panel);border:2px solid var(--line);padding:8px 10px;cursor:pointer;margin-left:12px;}
+.langG:hover{border-color:var(--amber);}
+</style>
+</head>
+<body>
+<div class="crt"></div>
+<div id="flash"></div>
+
+<!-- ============ INTRO / TITLE SCREEN ============ -->
+<div id="intro">
+  <div class="scene-wrap">
+    <div class="titlebar px">KARIM<small>.EXE</small></div>
+
+    <!-- Pixel scene: dev seen from behind, coding at night -->
+    <svg class="scene" id="scene" viewBox="0 0 240 150" shape-rendering="crispEdges" role="img" aria-label="Développeur de dos en train de coder la nuit, scène pixel-art"><defs><clipPath id="scr"><rect x="82" y="34" width="60" height="46"/></clipPath></defs><rect x="0" y="0" width="240" height="30" fill="#14122A"/><rect x="0" y="30" width="240" height="28" fill="#161430"/><rect x="0" y="58" width="240" height="30" fill="#1A1738"/><rect x="0" y="88" width="240" height="18" fill="#1F1B3E"/><rect x="150" y="40" width="90" height="66" fill="#2A2140" fill-opacity="0.5"/><rect x="16" y="16" width="52" height="46" fill="#222a52"/><rect x="16" y="16" width="52" height="24" fill="#1b2347"/><rect x="24" y="22" width="1" height="1" fill="#f3ecde"/><rect x="40" y="20" width="1" height="1" fill="#f3ecde"/><rect x="56" y="26" width="1" height="1" fill="#f3ecde"/><rect x="30" y="34" width="1" height="1" fill="#f3ecde"/><rect x="60" y="38" width="1" height="1" fill="#f3ecde"/><rect x="48" y="30" width="1" height="1" fill="#f3ecde"/><rect x="52" y="22" width="7" height="7" fill="#e9e4c8"/><rect x="54" y="21" width="3" height="1" fill="#fff6da"/><rect x="51" y="25" width="2" height="2" fill="#d8d2b4"/><rect x="16" y="50" width="8" height="12" fill="#10132b"/><rect x="24" y="46" width="6" height="16" fill="#10132b"/><rect x="30" y="52" width="7" height="10" fill="#10132b"/><rect x="37" y="44" width="6" height="18" fill="#10132b"/><rect x="43" y="50" width="9" height="12" fill="#10132b"/><rect x="52" y="47" width="7" height="15" fill="#10132b"/><rect x="59" y="52" width="9" height="10" fill="#10132b"/><rect x="18" y="53" width="1" height="1" fill="#f2b441"/><rect x="26" y="49" width="1" height="1" fill="#f2b441"/><rect x="39" y="47" width="1" height="1" fill="#f2b441"/><rect x="54" y="50" width="1" height="1" fill="#f2b441"/><rect x="61" y="55" width="1" height="1" fill="#f2b441"/><rect x="33" y="55" width="1" height="1" fill="#f2b441"/><rect x="14" y="14" width="56" height="50" fill="none" stroke="#3c3c64" stroke-width="3"/><rect x="40" y="16" width="2" height="46" fill="#3c3c64"/><rect x="16" y="38" width="52" height="2" fill="#3c3c64"/><rect x="150" y="18" width="74" height="4" fill="#3a2c22"/><rect x="152" y="7" width="8" height="12" fill="#e0567e"/><rect x="161" y="7" width="7" height="12" fill="#34e0c4"/><rect x="169" y="7" width="8" height="12" fill="#f2b441"/><rect x="178" y="7" width="6" height="12" fill="#b9a6e6"/><rect x="185" y="7" width="8" height="12" fill="#5bc0de"/><rect x="194" y="7" width="7" height="12" fill="#8fcf8f"/><rect x="206" y="9" width="8" height="8" fill="#f3ecde"/><rect x="208" y="11" width="2" height="2" fill="#14121f"/><rect x="211" y="13" width="2" height="2" fill="#14121f"/><rect x="150" y="28" width="40" height="30" fill="#163b27"/><rect x="150" y="28" width="40" height="30" fill="none" stroke="#0d2418" stroke-width="2"/><rect x="152" y="30" width="36" height="26" fill="#2f7d4f"/><rect x="163" y="30" width="14" height="9" fill="none" stroke="#cfe6d8" stroke-width="1"/><line x1="152" y1="43" x2="188" y2="43" stroke="#cfe6d8" stroke-width="1"/><rect x="168" y="47" width="2" height="2" fill="#f3ecde"/><rect x="100" y="18" width="34" height="16" fill="#15132a"/><rect x="100" y="18" width="34" height="16" fill="none" stroke="#c08a5a" stroke-width="2"/><rect x="106" y="27" width="18" height="2" fill="#34e0c4"/><rect x="122" y="23" width="2" height="8" fill="#34e0c4"/><rect x="108" y="23" width="2" height="4" fill="#34e0c4"/><rect x="0" y="98" width="240" height="6" fill="#6d4e3a"/><rect x="0" y="104" width="240" height="4" fill="#5a4030"/><rect x="0" y="108" width="240" height="14" fill="#3f2c20"/><rect x="0" y="121" width="240" height="4" fill="#2a1d16"/><rect x="0" y="125" width="240" height="25" fill="#100f1c"/><rect x="0" y="121" width="34" height="2" fill="#34e0c4" fill-opacity="0.8"/><rect x="34" y="121" width="34" height="2" fill="#34e0c4" fill-opacity="0.8"/><rect x="68" y="121" width="34" height="2" fill="#5bc0de" fill-opacity="0.8"/><rect x="102" y="121" width="34" height="2" fill="#b9a6e6" fill-opacity="0.8"/><rect x="136" y="121" width="34" height="2" fill="#e0567e" fill-opacity="0.8"/><rect x="170" y="121" width="34" height="2" fill="#e0567e" fill-opacity="0.8"/><rect x="204" y="121" width="34" height="2" fill="#f2b441" fill-opacity="0.8"/><rect x="76" y="28" width="72" height="62" fill="#1d1b30"/><rect x="78" y="30" width="68" height="56" fill="#2a2740"/><rect x="78" y="30" width="68" height="3" fill="#3a3656"/><rect x="82" y="34" width="60" height="46" fill="#07151a"/><g clip-path="url(#scr)"><g id="codeScroll"><rect x="90" y="38" width="18" height="2" fill="#b9a6e6"/><rect x="96" y="43" width="28" height="2" fill="#34e0c4"/><rect x="100" y="48" width="22" height="2" fill="#f2b441"/><rect x="100" y="53" width="16" height="2" fill="#8fcf8f"/><rect x="92" y="58" width="24" height="2" fill="#e0567e"/><rect x="96" y="63" width="14" height="2" fill="#5bc0de"/><rect x="90" y="68" width="30" height="2" fill="#cfc9bd"/><rect x="102" y="73" width="12" height="2" fill="#34e0c4"/><rect x="90" y="78" width="18" height="2" fill="#b9a6e6"/><rect x="96" y="83" width="28" height="2" fill="#34e0c4"/><rect x="100" y="88" width="22" height="2" fill="#f2b441"/><rect x="100" y="93" width="16" height="2" fill="#8fcf8f"/><rect x="92" y="98" width="24" height="2" fill="#e0567e"/><rect x="96" y="103" width="14" height="2" fill="#5bc0de"/><rect x="90" y="108" width="30" height="2" fill="#cfc9bd"/><rect x="102" y="113" width="12" height="2" fill="#34e0c4"/></g></g><rect x="82" y="34" width="60" height="4" fill="#0e2a30" fill-opacity="0.6"/><rect x="109" y="86" width="6" height="6" fill="#241f33"/><rect x="102" y="92" width="20" height="3" fill="#2a2740"/><rect x="138" y="40" width="7" height="7" fill="#f2d35a"/><rect x="54" y="86" width="22" height="3" fill="#2a2740"/><rect x="56" y="74" width="18" height="12" fill="#1d1b30"/><rect x="58" y="76" width="14" height="8" fill="#0e2230"/><rect x="59" y="78" width="8" height="1" fill="#34e0c4"/><rect x="196" y="70" width="3" height="28" fill="#3a3656"/><rect x="196" y="70" width="18" height="3" fill="#3a3656"/><rect x="210" y="70" width="8" height="6" fill="#2a2740"/><rect x="211" y="76" width="6" height="3" fill="#f2b441"/><rect x="204" y="80" width="22" height="18" fill="#f2b441" fill-opacity="0.16"/><rect x="208" y="84" width="16" height="12" fill="#f2b441" fill-opacity="0.12"/><rect x="40" y="88" width="10" height="10" fill="#9c5a3c"/><rect x="40" y="88" width="10" height="2" fill="#b06b48"/><rect x="38" y="78" width="5" height="12" fill="#3f8f5f"/><rect x="44" y="74" width="5" height="16" fill="#56b074"/><rect x="48" y="80" width="5" height="10" fill="#3f8f5f"/><rect x="168" y="90" width="9" height="8" fill="#e0567e"/><rect x="177" y="92" width="2" height="4" fill="#c2456a"/><rect x="168" y="90" width="9" height="2" fill="#f06f8e"/><rect x="170" y="84" width="2" height="2" fill="#cfc9d6" fill-opacity="0.7"/><rect x="173" y="80" width="2" height="2" fill="#cfc9d6" fill-opacity="0.6"/><rect x="171" y="77" width="2" height="2" fill="#cfc9d6" fill-opacity="0.4"/><rect x="86" y="92" width="52" height="7" fill="#23202f"/><rect x="86" y="92" width="52" height="1" fill="#322e44"/><rect x="89" y="94" width="3" height="3" fill="#34e0c4"/><rect x="93" y="94" width="3" height="3" fill="#3a3656"/><rect x="97" y="94" width="3" height="3" fill="#3a3656"/><rect x="101" y="94" width="3" height="3" fill="#3a3656"/><rect x="105" y="94" width="3" height="3" fill="#5bc0de"/><rect x="109" y="94" width="3" height="3" fill="#3a3656"/><rect x="113" y="94" width="3" height="3" fill="#3a3656"/><rect x="117" y="94" width="3" height="3" fill="#3a3656"/><rect x="121" y="94" width="3" height="3" fill="#b9a6e6"/><rect x="125" y="94" width="3" height="3" fill="#3a3656"/><rect x="129" y="94" width="3" height="3" fill="#3a3656"/><rect x="133" y="94" width="3" height="3" fill="#3a3656"/><rect x="146" y="93" width="9" height="6" fill="#23202f"/><rect x="150" y="93" width="1" height="3" fill="#34e0c4"/><path d="M150 95 q12 2 12 -6" fill="none" stroke="#0c0b14" stroke-width="1"/><rect x="86" y="84" width="48" height="40" fill="#211e36"/><rect x="86" y="84" width="48" height="40" fill="none" stroke="#2c2945" stroke-width="2"/><rect x="88" y="86" width="44" height="6" fill="#2c2945"/><rect x="92" y="92" width="4" height="30" fill="#e0567e"/><rect x="124" y="92" width="4" height="30" fill="#34e0c4"/><rect x="80" y="104" width="8" height="5" fill="#1a1830"/><rect x="132" y="104" width="8" height="5" fill="#1a1830"/><rect x="94" y="96" width="32" height="28" fill="#b5532f"/><rect x="94" y="96" width="32" height="4" fill="#c96a42"/><rect x="94" y="108" width="32" height="16" fill="#a04a28"/><rect x="108" y="100" width="4" height="24" fill="#8f3f23"/><rect x="100" y="90" width="20" height="8" fill="#9a4527"/><rect x="100" y="90" width="20" height="2" fill="#b5532f"/><rect x="102" y="76" width="16" height="14" fill="#2b2230"/><rect x="104" y="74" width="12" height="3" fill="#3a2f3e"/><rect x="104" y="86" width="12" height="4" fill="#c98b66"/><rect x="104" y="86" width="12" height="1" fill="#a8704f"/><rect x="100" y="78" width="3" height="10" fill="#16141f"/><rect x="115" y="78" width="3" height="10" fill="#16141f"/><rect x="100" y="76" width="3" height="3" fill="#34e0c4"/><rect x="115" y="76" width="3" height="3" fill="#34e0c4"/><path d="M101 78 q9 -10 17 0" fill="none" stroke="#16141f" stroke-width="2"/><rect x="126" y="98" width="7" height="5" fill="#c98b66"/><rect x="126" y="98" width="7" height="1" fill="#a8704f"/><rect x="70" y="108" width="2" height="16" fill="#0c0b14"/><rect x="70" y="124" width="8" height="2" fill="#0c0b14"/></svg>
+
+    <div class="startbar">
+      <div class="press">▶ PRESS START</div>
+      <button class="startbtn" id="startBtn" type="button" data-en="ENTER" data-fr="ENTRER">ENTER</button>
+      <span class="hintkey" data-en="[ click or press ENTER ]" data-fr="[ clic ou touche ENTRÉE ]">[ click or press ENTER ]</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ GAME / PORTFOLIO ============ -->
+<div id="game">
+  <div class="hud">
+    <div class="hud-in">
+      <a href="#" class="name px" id="homeBtn">KARIM<b>.EXE</b></a>
+      <span class="coin">★ PRODUCT ENGINEER</span>
+      <button class="langG" id="langG" type="button">FR</button>
+    </div>
+  </div>
+
+  <div class="screenwrap">
+
+    <!-- ===== MENU ===== -->
+    <section class="screen active" id="screen-menu">
+      <h1 class="menu-title px" data-en="SELECT" data-fr="SÉLECTION">SELECT</h1>
+      <p class="menu-sub" data-en="Full-stack · Next.js / Supabase · available remote" data-fr="Full-stack · Next.js / Supabase · dispo en remote">Full-stack · Next.js / Supabase · available remote</p>
+      <div class="panels">
+        <button class="panel" data-go="about">
+          <svg class="ico" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="5" y="2" width="6" height="6" fill="#C98B66"/><rect x="5" y="2" width="6" height="2" fill="#2B2230"/><rect x="4" y="9" width="8" height="5" fill="#C75D43"/></svg>
+          <div class="p-no px">01</div>
+          <div class="p-label px" data-en="WHO AM I" data-fr="QUI SUIS-JE">WHO AM I</div>
+          <div class="p-blurb" data-en="From lab to code. My background and character sheet." data-fr="Du labo au code. Mon parcours et ma fiche de perso.">From lab to code. My background and character sheet.</div>
+          <div class="p-go px" data-en="▶ ENTER" data-fr="▶ ENTRER">▶ ENTER</div>
+        </button>
+        <button class="panel" data-go="projects">
+          <svg class="ico" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="2" y="3" width="12" height="9" fill="#2A2740"/><rect x="3" y="4" width="10" height="7" fill="#0E1A1C"/><rect x="4" y="5" width="5" height="1" fill="#34E0C4"/><rect x="4" y="7" width="7" height="1" fill="#F2B441"/><rect x="4" y="9" width="4" height="1" fill="#E0567E"/></svg>
+          <div class="p-no px">02</div>
+          <div class="p-label px" data-en="PROJECTS" data-fr="PROJETS">PROJECTS</div>
+          <div class="p-blurb" data-en="What I build. Aquarys up front." data-fr="Ce que je développe. Aquarys en tête d'affiche.">What I build. Aquarys up front.</div>
+          <div class="p-go px" data-en="▶ ENTER" data-fr="▶ ENTRER">▶ ENTER</div>
+        </button>
+        <button class="panel" data-go="contact">
+          <svg class="ico" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="2" y="4" width="12" height="8" fill="#1B1830"/><rect x="2" y="4" width="12" height="8" fill="none" stroke="#34E0C4" stroke-width="1"/><path d="M2 4 L8 9 L14 4" fill="none" stroke="#F2B441" stroke-width="1"/></svg>
+          <div class="p-no px">03</div>
+          <div class="p-label px" data-en="CONTACT" data-fr="ME CONTACTER">CONTACT</div>
+          <div class="p-blurb" data-en="A role, a project? Let's play." data-fr="Un poste, un projet ? Lançons la partie.">A role, a project? Let's play.</div>
+          <div class="p-go px" data-en="▶ ENTER" data-fr="▶ ENTRER">▶ ENTER</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== QUI SUIS-JE ===== -->
+    <section class="screen" id="screen-about">
+      <button class="back px" data-back type="button" data-en="◀ BACK" data-fr="◀ RETOUR">◀ BACK</button>
+      <h2 class="sc-h" data-en="WHO AM I" data-fr="QUI SUIS-JE">WHO AM I</h2>
+      <div class="rpg">
+        <div class="sheet">
+          <div class="pl px">PLAYER 01 — KARIM</div>
+          <div class="stat"><span class="sk" data-en="CLASS" data-fr="CLASSE">CLASS</span><span class="sv">Product Engineer / Full-Stack</span></div>
+          <div class="stat"><span class="sk" data-en="ORIGIN" data-fr="ORIGINE">ORIGIN</span><span class="sv" data-en="Chemistry &amp; water treatment" data-fr="Chimie &amp; traitement des eaux">Chemistry &amp; water treatment</span></div>
+          <div class="stat"><span class="sk" data-en="WEAPON" data-fr="ARME">WEAPON</span><span class="sv">Next.js + Supabase</span></div>
+          <div class="stat"><span class="sk" data-en="LANGUAGES" data-fr="LANGUES">LANGUAGES</span><span class="sv">FR · AR · EN</span></div>
+          <div class="stat"><span class="sk" data-en="AVAILABILITY" data-fr="DISPO">AVAILABILITY</span><span class="sv">Remote</span></div>
+          <div class="stat"><span class="sk" data-en="LOCATION" data-fr="ZONE">LOCATION</span><span class="sv">Île-de-France</span></div>
+        </div>
+        <div class="bio">
+          <p data-en="Field technician turned builder. A background in chemistry and environmental science, then several years in the field in water treatment." data-fr="Technicien de terrain devenu builder. Une formation en chimie et environnement, puis plusieurs années sur le terrain dans le traitement des eaux.">Field technician turned builder. A background in chemistry and environmental science, then several years in the field in water treatment.</p>
+          <p data-en="That's where it clicked: the best tools are built by people who understand the work. So I learned to build them. I talk to users, I design, I code, I ship." data-fr="C'est là que j'ai compris une chose : les meilleurs outils naissent de ceux qui connaissent le métier. Alors j'ai appris à les construire. Je parle aux utilisateurs, je conçois, je code, je déploie.">That's where it clicked: the best tools are built by people who understand the work. So I learned to build them. I talk to users, I design, I code, I ship.</p>
+          <div class="quests">
+            <h4 class="px" data-en="BACKGROUND" data-fr="PARCOURS">BACKGROUND</h4>
+            <div class="quest"><span class="star">✦</span><span data-en="Sampling &amp; instrumentation technician — water treatment (today)" data-fr="Préleveur instrumentiste — traitement des eaux (aujourd'hui)">Sampling &amp; instrumentation technician — water treatment (today)</span></div>
+            <div class="quest"><span class="star">✦</span><span data-en="Professional bachelor — Energy &amp; Environment" data-fr="Licence Pro — Maîtrise de l'Énergie et Environnement">Professional bachelor — Energy &amp; Environment</span></div>
+            <div class="quest"><span class="star">✦</span><span data-en="Chemical &amp; Process Engineering diploma — IUT de Rambouillet (2018–2020)" data-fr="DUT Génie Chimique / Génie des Procédés — IUT de Rambouillet (2018–2020)">Chemical &amp; Process Engineering diploma — IUT de Rambouillet (2018–2020)</span></div>
+            <div class="quest"><span class="star">✦</span><span data-en="Bachelor — Maths, CS, Physics &amp; Engineering — CY Cergy (2016–2018)" data-fr="Licence Maths, Info, Physique &amp; Ingénierie — CY Cergy (2016–2018)">Bachelor — Maths, CS, Physics &amp; Engineering — CY Cergy (2016–2018)</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROJETS ===== -->
+    <section class="screen" id="screen-projects">
+      <button class="back px" data-back type="button" data-en="◀ BACK" data-fr="◀ RETOUR">◀ BACK</button>
+      <h2 class="sc-h" data-en="PROJECTS" data-fr="PROJETS">PROJECTS</h2>
+
+      <article class="proj boss">
+        <div class="ptag px" data-en="★ MAIN PROJECT" data-fr="★ PROJET PRINCIPAL">★ MAIN PROJECT</div>
+        <h3>Aquarys</h3>
+        <p data-en="A web app that digitizes a water-treatment lab's daily operations — sampling rounds, real-time analysis tracking, reagent stock, and 9 user roles across 3 teams (field / lab / logistics) with database-level access control (RLS / RBAC). Built solo, deployed to production, used daily by multiple teams." data-fr="Une app web qui digitalise les opérations quotidiennes d'un labo de traitement des eaux — tournées de prélèvement, suivi des analyses en temps réel, stock de réactifs, et 9 rôles sur 3 équipes (terrain / labo / logistique) avec contrôle d'accès au niveau base (RLS / RBAC). Développée en solo, déployée en production, utilisée au quotidien par plusieurs équipes.">A web app that digitizes a water-treatment lab's daily operations — sampling rounds, real-time analysis tracking, reagent stock, and 9 user roles across 3 teams (field / lab / logistics) with database-level access control (RLS / RBAC). Built solo, deployed to production, used daily by multiple teams.</p>
+        <div class="tags"><span class="tag">Next.js (App Router)</span><span class="tag">Supabase · RLS</span><span class="tag">PostgreSQL</span><span class="tag">Vercel</span><span class="tag">Cloudflare</span></div>
+        <div class="meta"><span data-en="ROLE · DESIGN + DEV" data-fr="RÔLE · CONCEPTION + DEV">ROLE · DESIGN + DEV</span><span data-en="STATUS · IN PRODUCTION" data-fr="STATUT · EN PRODUCTION">STATUS · IN PRODUCTION</span></div>
+        <a href="https://applabo.vercel.app" target="_blank" rel="noopener" class="plink" data-en="▶ VIEW LIVE DEMO" data-fr="▶ VOIR LA DÉMO">▶ VIEW LIVE DEMO</a>
+      </article>
+
+      <div class="prow">
+        <article class="proj">
+          <h3>SideQuest AI</h3>
+          <p data-en="A personal app that helps gamers decide which game to launch from their library. Same technical base as Aquarys." data-fr="Une app perso qui aide les joueurs à décider quel jeu lancer dans leur bibliothèque. Même base technique qu'Aquarys.">A personal app that helps gamers decide which game to launch from their library. Same technical base as Aquarys.</p>
+          <div class="tags"><span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span></div>
+          <div class="meta"><span data-en="ROLE · DESIGN + DEV" data-fr="RÔLE · CONCEPTION + DEV">ROLE · DESIGN + DEV</span></div>
+        </article>
+        <article class="proj">
+          <h3>CarShyne</h3>
+          <p data-en="Co-founded an express car-care cleaning-kit brand (product + identity). Advised on the website." data-fr="Co-création d'une marque de kits de nettoyage auto express (produit + identité). Conseil sur le site.">Co-founded an express car-care cleaning-kit brand (product + identity). Advised on the website.</p>
+          <div class="tags"><span class="tag">Brand</span><span class="tag">E-commerce</span></div>
+          <div class="meta"><span data-en="CO-FOUNDER" data-fr="CO-FONDATEUR">CO-FOUNDER</span></div>
+        </article>
+      </div>
+
+      <div class="inv">
+        <h4 class="px" data-en="INVENTORY" data-fr="ÉQUIPEMENT">INVENTORY</h4>
+        <div class="inv-grid">
+          <div class="inv-col"><h5>FRONT</h5><div class="chips"><span class="chip">Next.js</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Tailwind</span></div></div>
+          <div class="inv-col"><h5>BACK / DATA</h5><div class="chips"><span class="chip">Supabase</span><span class="chip">PostgreSQL</span><span class="chip">Node.js</span><span class="chip">SQL</span></div></div>
+          <div class="inv-col"><h5>INFRA</h5><div class="chips"><span class="chip">Vercel</span><span class="chip">Cloudflare</span><span class="chip">Git</span><span class="chip">GitHub</span></div></div>
+          <div class="inv-col"><h5 data-en="DOMAIN" data-fr="DOMAINE">DOMAIN</h5><div class="chips"><span class="chip dom" data-en="Water treatment" data-fr="Traitement des eaux">Water treatment</span><span class="chip dom" data-en="Chemistry" data-fr="Chimie">Chemistry</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section class="screen" id="screen-contact">
+      <button class="back px" data-back type="button" data-en="◀ BACK" data-fr="◀ RETOUR">◀ BACK</button>
+      <h2 class="sc-h" data-en="CONTACT" data-fr="ME CONTACTER">CONTACT</h2>
+      <div class="cgrid">
+        <a class="send" href="mailto:karimchlef02@gmail.com?subject=Hello%20Karim" data-en="✉ EMAIL ME" data-fr="✉ M'ÉCRIRE">✉ EMAIL ME</a>
+        <div class="reach">
+          <a href="https://www.linkedin.com/in/karim-sehil" target="_blank" rel="noopener"><span class="k px">LINKEDIN</span> karim-sehil</a>
+          <a href="https://github.com/karim-ops78" target="_blank" rel="noopener"><span class="k px">GITHUB</span> /karim-ops78</a>
+          <a href="mailto:karimchlef02@gmail.com"><span class="k px">EMAIL</span> karimchlef02@gmail.com</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer><div class="foot"><span>INSERT COIN · © 2026 KARIM</span><br><span data-en="HAND-BUILT · HTML · CSS · JS" data-fr="CONSTRUIT À LA MAIN · HTML · CSS · JS">HAND-BUILT · HTML · CSS · JS</span></div></footer>
+</div>
 
 <script>
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var intro = document.getElementById('intro');
+  var started = false;
 
-  /* ---- BOOT sequence ---- */
-  var lines = document.querySelectorAll('#code .line');
-  var booted = false;
-  function finishBoot(){
-    if(booted) return; booted = true;
-    document.body.classList.add('booted');
+  function enter(){
+    if(started) return; started = true;
+    if(reduce){ document.body.classList.add('entered'); window.scrollTo(0,0); return; }
+    intro.classList.add('diving');
+    var flash=document.getElementById('flash');
+    setTimeout(function(){ flash.classList.add('on'); }, 900);
+    setTimeout(function(){ document.body.classList.add('entered'); window.scrollTo(0,0); }, 1480);
+    setTimeout(function(){ flash.classList.add('off'); }, 1560);
   }
-  document.getElementById('skip').addEventListener('click', finishBoot);
-
-  if(reduce){
-    lines.forEach(function(l){l.classList.add('show');});
-    finishBoot();
-  } else {
-    var i=0;
-    (function step(){
-      if(i<lines.length){
-        lines[i].classList.add('show'); i++;
-        setTimeout(step, 360);
-      } else {
-        setTimeout(finishBoot, 650);
-      }
-    })();
-  }
-
-  /* ---- reveal on scroll ---- */
-  var rv = document.querySelectorAll('.reveal');
-  if('IntersectionObserver' in window){
-    var io = new IntersectionObserver(function(es){
-      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
-    },{threshold:.12});
-    rv.forEach(function(e){io.observe(e);});
-  } else { rv.forEach(function(e){e.classList.add('in');}); }
-
-  /* ---- sun-arc + phase light ---- */
-  var path = document.getElementById('arcPath');
-  var prog = document.getElementById('arcProg');
-  var sun  = document.getElementById('sun');
-  var stationsG = document.getElementById('stations');
-  var tips = [document.getElementById('tip0'),document.getElementById('tip1'),document.getElementById('tip2')];
-  var pills = Array.prototype.slice.call(document.querySelectorAll('.pill'));
-  var anchors = ['#parcours','#projets','#contact'];
-  var phaseColors = ['var(--aube)','var(--midi)','var(--maghreb)'];
-  var L = path.getTotalLength();
-  var stationT = [0.15,0.5,0.85];
-
-  // place stations + hover
-  stationT.forEach(function(t,idx){
-    var pt = path.getPointAtLength(t*L);
-    var g = document.createElementNS('http://www.w3.org/2000/svg','g');
-    g.setAttribute('class','station'); g.setAttribute('tabindex','0');
-    g.setAttribute('role','link');
-    var c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx',pt.x); c.setAttribute('cy',pt.y); c.setAttribute('r','5');
-    g.appendChild(c);
-    g.addEventListener('click',function(){location.hash=anchors[idx];});
-    g.addEventListener('keydown',function(e){if(e.key==='Enter'){location.hash=anchors[idx];}});
-    // position tooltip under station (convert svg x -> % of holder)
-    tips[idx].style.left = (t*100)+'%';
-    g.addEventListener('mouseenter',function(){tips[idx].classList.add('force');});
-    g.addEventListener('mouseleave',function(){tips[idx].classList.remove('force');});
-    g.addEventListener('focus',function(){tips[idx].classList.add('force');});
-    g.addEventListener('blur',function(){tips[idx].classList.remove('force');});
-    g.__circle=c;
-    stationsG.appendChild(g);
+  document.getElementById('startBtn').addEventListener('click', enter);
+  intro.addEventListener('click', function(e){ if(e.target.id!=='startBtn') enter(); });
+  document.addEventListener('keydown', function(e){
+    if(!started && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); enter(); }
   });
-  var stationEls = Array.prototype.slice.call(stationsG.children);
 
-  function setSun(frac){
-    frac = Math.max(0,Math.min(1,frac));
-    var pt = path.getPointAtLength(frac*L);
-    sun.setAttribute('cx',pt.x); sun.setAttribute('cy',pt.y);
-    prog.setAttribute('stroke-dasharray', (frac*L)+' '+L);
+  /* menu navigation */
+  var screens = {
+    menu: document.getElementById('screen-menu'),
+    about: document.getElementById('screen-about'),
+    projects: document.getElementById('screen-projects'),
+    contact: document.getElementById('screen-contact')
+  };
+  function show(key){
+    Object.keys(screens).forEach(function(k){ screens[k].classList.toggle('active', k===key); });
+    window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'});
   }
-
-  function setPhase(idx){
-    document.documentElement.style.setProperty('--sun', phaseColors[idx]);
-    // bar tint warms toward maghreb
-    var barFg = ['#EDE9E2','#0E1116','#F6ECE3'][idx];
-    var barBg = ['rgba(14,17,22,.82)','rgba(247,250,250,.85)','rgba(34,24,38,.85)'][idx];
-    document.documentElement.style.setProperty('--bar', barBg);
-    document.documentElement.style.setProperty('--bar-fg', barFg);
-    document.querySelector('.logo').style.color = barFg;
-    stationEls.forEach(function(el,k){el.classList.toggle('active',k===idx);});
-    pills.forEach(function(p,k){p.classList.toggle('active',k===idx);});
-  }
-
-  // scroll-driven sun across the 3 phases
-  var sections = [document.getElementById('parcours'),document.getElementById('projets'),document.getElementById('contact')];
-  var ticking=false;
-  function onScroll(){
-    if(ticking) return; ticking=true;
-    requestAnimationFrame(function(){
-      var start = sections[0].offsetTop - window.innerHeight*0.5;
-      var end   = sections[2].offsetTop + sections[2].offsetHeight - window.innerHeight*0.5;
-      var frac = (window.scrollY - start)/(end-start);
-      setSun(frac);
-      ticking=false;
-    });
-  }
-  window.addEventListener('scroll',onScroll,{passive:true});
-  window.addEventListener('resize',function(){L=path.getTotalLength();onScroll();});
-
-  // phase detection -> light shift
-  if('IntersectionObserver' in window){
-    var pio = new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        if(e.isIntersecting){ setPhase(sections.indexOf(e.target)); }
-      });
-    },{threshold:.4});
-    sections.forEach(function(s){pio.observe(s);});
-  }
-  setPhase(0); setSun(0); onScroll();
+  document.querySelectorAll('.panel').forEach(function(p){
+    p.addEventListener('click', function(){ show(p.getAttribute('data-go')); });
+  });
+  document.querySelectorAll('[data-back]').forEach(function(b){
+    b.addEventListener('click', function(){ show('menu'); });
+  });
+  document.getElementById('homeBtn').addEventListener('click', function(e){ e.preventDefault(); show('menu'); });
+})();
+<\/script>
+<script>
+(function(){
+  var lang='en', btn=document.getElementById('langG');
+  function apply(){ document.querySelectorAll('[data-en]').forEach(function(el){ var v=el.getAttribute('data-'+lang); if(v!==null) el.textContent=v; }); btn.textContent=lang==='fr'?'EN':'FR'; document.documentElement.lang=lang; }
+  btn.addEventListener('click',function(){ lang=lang==='fr'?'en':'fr'; apply(); });
+  apply();
+})();
+<\/script>
+</body>
+</html>
+`;
+  var ov=document.getElementById('arcadeOverlay'),fr=document.getElementById('arcade');
+  window.openArcade=function(){ fr.srcdoc=GAME; ov.classList.add('open'); document.body.style.overflow='hidden'; };
+  function closeArcade(){ ov.classList.remove('open'); fr.removeAttribute('srcdoc'); document.body.style.overflow=''; }
+  ['arcadeOpen','arcadeOpen2','arcadeOpen3'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('click',window.openArcade); });
+  document.getElementById('arcadeExit').addEventListener('click',closeArcade);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&ov.classList.contains('open')) closeArcade(); });
 })();
 </script>
 </body>
