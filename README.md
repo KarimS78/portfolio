@@ -34,4 +34,4 @@ npx serve .
 
 - Portfolio: https://karimsehil.com
 - LinkedIn: https://www.linkedin.com/in/karim-sehil
-- GitHub: https://github.com/karim-ops78
+- GitHub: https://github.com/KarimS78
