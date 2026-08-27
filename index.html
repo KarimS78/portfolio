@@ -97,6 +97,7 @@
   .proj-meta{font-family:var(--mono);font-size:.71rem;color:var(--slate);margin-top:14px;display:flex;flex-wrap:wrap;gap:18px;}
   .proj.feature .proj-meta{color:#A9B4B0;}
   .proj-link{font-family:var(--mono);font-size:.78rem;color:var(--teal);margin-top:16px;display:inline-block;border-bottom:1px solid currentColor;padding-bottom:1px;}
+  .proj-link + .proj-link{margin-left:20px;}
   @media(min-width:760px){.proj-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;}.proj-row .proj{margin-bottom:0;}}
 
   /* skills tiers */
@@ -241,11 +242,12 @@
 
     <div class="proj-row">
       <article class="proj">
-        <h3>SideQuest AI</h3>
-        <p class="pcr tb en">A personal app that helps gamers <strong>decide which game to launch</strong> from their library — no more decision paralysis. Same technical base as Aquarys.</p>
-        <p class="pcr tb fr">Une app perso qui aide les joueurs à <strong>décider quel jeu lancer</strong> dans leur bibliothèque — fini l'indécision. Même base technique qu'Aquarys.</p>
-        <div class="tags"><span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span></div>
-        <a href="https://github.com/KarimS78/sidequest" target="_blank" rel="noopener" class="proj-link"><span class="ti en">View on GitHub →</span><span class="ti fr">Voir sur GitHub →</span></a>
+        <h3>SideQuest</h3>
+        <p class="pcr tb en">A personal app that says <strong>which game to launch tonight</strong> — read from a Steam library, the free hour you actually have, and your mood. The recommendation is a <strong>local scoring engine</strong>, not a model call: every pick shows the components it scored on, so the explanation cannot drift from the maths.</p>
+        <p class="pcr tb fr">Une app perso qui dit <strong>quel jeu lancer ce soir</strong> — à partir d'une bibliothèque Steam, du temps réellement dispo et de l'humeur. La reco est un <strong>moteur de score local</strong>, pas un appel modèle : chaque choix affiche les composantes sur lesquelles il a marqué, donc l'explication ne peut pas diverger du calcul.</p>
+        <div class="tags"><span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">PWA</span></div>
+        <a href="https://sidequest-eta-inky.vercel.app" target="_blank" rel="noopener" class="proj-link"><span class="ti en">Try it live →</span><span class="ti fr">Essayer en ligne →</span></a>
+        <a href="https://github.com/KarimS78/sidequest" target="_blank" rel="noopener" class="proj-link"><span class="ti en">GitHub →</span><span class="ti fr">GitHub →</span></a>
       </article>
       <article class="proj">
         <h3>Lumea<span class="h3sub"><span class="ti en">my web studio</span><span class="ti fr">mon studio web</span></span></h3>
@@ -663,9 +665,10 @@ footer{border-top:2px solid var(--line);margin-top:40px;padding:24px 18px;text-a
 
       <div class="prow">
         <article class="proj">
-          <h3>SideQuest AI</h3>
-          <p data-en="A personal app that helps gamers decide which game to launch from their library. Same technical base as Aquarys." data-fr="Une app perso qui aide les joueurs à décider quel jeu lancer dans leur bibliothèque. Même base technique qu'Aquarys.">A personal app that helps gamers decide which game to launch from their library. Same technical base as Aquarys.</p>
-          <div class="tags"><span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span></div>
+          <h3>SideQuest</h3>
+          <p data-en="A personal app that says which game to launch tonight, read from a Steam library, your free hour and your mood. The recommendation is a local scoring engine, not a model call: every pick shows the components it scored on." data-fr="Une app perso qui dit quel jeu lancer ce soir, à partir d'une bibliothèque Steam, du temps dispo et de l'humeur. La reco est un moteur de score local, pas un appel modèle : chaque choix affiche les composantes sur lesquelles il a marqué.">A personal app that says which game to launch tonight, read from a Steam library, your free hour and your mood. The recommendation is a local scoring engine, not a model call: every pick shows the components it scored on.</p>
+          <div class="tags"><span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">PWA</span></div>
+          <a class="plink" href="https://sidequest-eta-inky.vercel.app" target="_blank" rel="noopener" data-en="▶ PLAY SIDEQUEST" data-fr="▶ VOIR SIDEQUEST">▶ PLAY SIDEQUEST</a>
           <div class="meta"><span data-en="ROLE · DESIGN + DEV" data-fr="RÔLE · CONCEPTION + DEV">ROLE · DESIGN + DEV</span></div>
         </article>
         <article class="proj">
