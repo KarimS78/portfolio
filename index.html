@@ -67,7 +67,7 @@
   .spec-row{display:grid;grid-template-columns:128px 1fr;font-family:var(--mono);font-size:.78rem;border-bottom:1px solid var(--line);}
   .spec-row:last-child{border-bottom:0;}
   .spec-k{padding:11px 14px;color:var(--slate);letter-spacing:.06em;text-transform:uppercase;font-size:.66rem;border-right:1px solid var(--line);background:var(--paper);display:flex;align-items:center;}
-  .spec-v{padding:11px 14px;display:flex;align-items:center;}
+  .spec-v{padding:11px 14px;display:flex;align-items:center;flex-wrap:wrap;}
   .spec-v .dot{color:var(--teal-bright);margin:0 .4em;}
   .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;align-items:center;}
   .btn.ghost{background:transparent;color:var(--ink);}
@@ -149,6 +149,7 @@
   .arcade-frame{width:100%;height:100%;border:0;display:block;}
   .arcade-exit{position:fixed;top:14px;right:14px;z-index:1001;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:#EDE9E2;background:rgba(18,16,31,.65);border:1px solid rgba(237,233,226,.32);border-radius:3px;padding:9px 13px;cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:border-color .2s,color .2s;}
   .arcade-exit:hover{border-color:#34E0C4;color:#34E0C4;}
+  @media(max-width:560px){.arcade-exit{top:auto;bottom:calc(14px + env(safe-area-inset-bottom));right:50%;transform:translateX(50%);white-space:nowrap;}}
 </style>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="Karim Sehil — Application Security Analyst · Full-Stack Developer"/>
@@ -267,8 +268,8 @@
       </article>
       <article class="proj">
         <h3>Avelyo<span class="h3sub"><span class="ti en">quotes &amp; invoices SaaS</span><span class="ti fr">SaaS de devis et factures</span></span></h3>
-        <p class="pcr tb en">A <strong>multi-tenant quoting and invoicing SaaS</strong> for tradespeople and small businesses, grown out of an invoicing app I run in production for a construction company. Each company is an isolated organisation — server-side anti-IDOR checks, deny-by-default roles, full audit log — with quotes turned into invoices and PDFs generated on the fly. Ready for France's e-invoicing reform: it produces <strong>Factur-X</strong> invoices (PDF/A-3 + EN 16931 XML).</p>
-        <p class="pcr tb fr">Un <strong>SaaS de devis et de facturation multi-entreprises</strong> pour artisans et TPE, né d'une app de facturation que je fais tourner en production pour une entreprise du BTP. Chaque entreprise est une organisation isolée — contrôles anti-IDOR côté serveur, rôles en refus par défaut, journal d'audit complet — avec devis convertis en factures et PDF générés à la volée. Prêt pour la réforme de la facturation électronique : il produit des factures <strong>Factur-X</strong> (PDF/A-3 + XML EN 16931).</p>
+        <p class="pcr tb en">A <strong>multi-tenant quoting and invoicing SaaS</strong> for tradespeople and small businesses. Each company is an isolated organisation — server-side anti-IDOR checks, deny-by-default roles, full audit log — with quotes turned into invoices and PDFs generated on the fly. Ready for France's e-invoicing reform: it produces <strong>Factur-X</strong> invoices (PDF/A-3 + EN 16931 XML).</p>
+        <p class="pcr tb fr">Un <strong>SaaS de devis et de facturation multi-entreprises</strong> pour artisans et TPE. Chaque entreprise est une organisation isolée — contrôles anti-IDOR côté serveur, rôles en refus par défaut, journal d'audit complet — avec devis convertis en factures et PDF générés à la volée. Prêt pour la réforme de la facturation électronique : il produit des factures <strong>Factur-X</strong> (PDF/A-3 + XML EN 16931).</p>
         <div class="tags"><span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">PostgreSQL</span><span class="tag">Drizzle</span><span class="tag">Better Auth</span><span class="tag">Factur-X</span></div>
       </article>
       <article class="proj">
@@ -491,6 +492,7 @@ body.entered #intro{display:none;}
 .hud .name b{color:var(--amber);}
 .hud .coin{font-family:var(--px);font-size:.6rem;color:var(--grey);}
 @media(max-width:560px){.hud .coin{display:none;}}
+@media(max-width:560px){#game footer{padding-bottom:72px;}}
 
 .screenwrap{max-width:1080px;margin:0 auto;padding:30px 18px 120px;}
 
@@ -713,7 +715,7 @@ footer{border-top:2px solid var(--line);margin-top:40px;padding:24px 18px;text-a
         </article>
         <article class="proj">
           <h3>Avelyo</h3>
-          <p data-en="A multi-tenant quoting and invoicing SaaS for tradespeople and small businesses, grown out of an invoicing app I run in production for a construction company. Each company is an isolated organisation (anti-IDOR checks, deny-by-default roles, audit log). Ready for France's e-invoicing reform: it produces Factur-X invoices (PDF/A-3 + EN 16931 XML)." data-fr="Un SaaS de devis et de facturation multi-entreprises pour artisans et TPE, né d'une app de facturation que je fais tourner en production pour une entreprise du BTP. Chaque entreprise est une organisation isolée (contrôles anti-IDOR, rôles en refus par défaut, journal d'audit). Prêt pour la réforme de la facturation électronique : il produit des factures Factur-X (PDF/A-3 + XML EN 16931).">A multi-tenant quoting and invoicing SaaS for tradespeople and small businesses, grown out of an invoicing app I run in production for a construction company. Each company is an isolated organisation (anti-IDOR checks, deny-by-default roles, audit log). Ready for France's e-invoicing reform: it produces Factur-X invoices (PDF/A-3 + EN 16931 XML).</p>
+          <p data-en="A multi-tenant quoting and invoicing SaaS for tradespeople and small businesses. Each company is an isolated organisation (anti-IDOR checks, deny-by-default roles, audit log). Ready for France's e-invoicing reform: it produces Factur-X invoices (PDF/A-3 + EN 16931 XML)." data-fr="Un SaaS de devis et de facturation multi-entreprises pour artisans et TPE. Chaque entreprise est une organisation isolée (contrôles anti-IDOR, rôles en refus par défaut, journal d'audit). Prêt pour la réforme de la facturation électronique : il produit des factures Factur-X (PDF/A-3 + XML EN 16931).">A multi-tenant quoting and invoicing SaaS for tradespeople and small businesses. Each company is an isolated organisation (anti-IDOR checks, deny-by-default roles, audit log). Ready for France's e-invoicing reform: it produces Factur-X invoices (PDF/A-3 + EN 16931 XML).</p>
           <div class="tags"><span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">PostgreSQL</span><span class="tag">Drizzle</span><span class="tag">Better Auth</span><span class="tag">Factur-X</span></div>
           <div class="meta"><span data-en="ROLE · DESIGN + DEV" data-fr="RÔLE · CONCEPTION + DEV">ROLE · DESIGN + DEV</span></div>
         </article>
