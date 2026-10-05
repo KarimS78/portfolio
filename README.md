@@ -1,6 +1,6 @@
 # Portfolio — Karim Sehil
 
-Personal portfolio of **Karim Sehil — Cyber Security Analyst**.
+Personal portfolio of **Karim Sehil — Cyber Security Analyst · Application Security**.
 From the lab floor to production code.
 
 🔗 **Live site:** https://karimsehil.com
