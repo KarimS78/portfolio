@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARIM.EXE — décor 3D (aperçu)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;height:100%;background:#0C0A16;color:#F3ECDE;font-family:"VT323",monospace;overflow:hidden}
+#stage{position:absolute;inset:0}
+.top{position:absolute;left:0;right:0;top:0;padding:18px;text-align:center;font-family:"Press Start 2P",monospace;font-size:clamp(.8rem,3vw,1.3rem);color:#34E0C4;text-shadow:0 3px 0 #0a3d36;pointer-events:none}
+.top small{color:#F2B441;font-size:1em}
+.bar{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:center;background:rgba(12,10,22,.78)}
+.bar label{font-family:"Press Start 2P",monospace;font-size:.55rem;color:#F2B441}
+.bar input[type=range]{width:min(52vw,360px);accent-color:#34E0C4}
+.bar output{font-size:1.4rem;min-width:3.2em}
+.bar button{font-family:"Press Start 2P",monospace;font-size:.55rem;color:#12101F;background:#34E0C4;border:0;padding:12px 12px;min-height:40px;cursor:pointer}
+.bar button.alt{background:#232043;color:#F3ECDE;border:2px solid #34315A}
+#flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:#e8fffb;transition:opacity .5s}
+#flash.on{opacity:1}
+#msg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:"Press Start 2P",monospace;font-size:.7rem;color:#12101F;text-align:center;line-height:2;opacity:0;pointer-events:none;transition:opacity .4s}
+#msg.on{opacity:1}
+</style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./vendor/addons/"}}</script>
+</head>
+<body>
+<div id="stage"></div>
+<div class="top">KARIM<small>.EXE</small></div>
+<div id="flash"></div>
+<div id="msg"></div>
+<div class="bar">
+  <label for="hr">HEURE</label>
+  <input id="hr" type="range" min="0" max="23.75" step="0.25">
+  <output id="out"></output>
+  <button id="now" class="alt" type="button">HEURE RÉELLE</button>
+  <button id="dive" type="button">▶ PLONGER</button>
+</div>
+<script type="module">
+import { createScene } from './scene3d.js';
+const qs = new URLSearchParams(location.search);
+const hr = document.getElementById('hr'), out = document.getElementById('out'), flash = document.getElementById('flash'), msg = document.getElementById('msg');
+const real = () => { const d = new Date(); return d.getHours() + d.getMinutes() / 60; };
+const fmt = (h) => String(Math.floor(h)).padStart(2, '0') + ':' + String(Math.round((h % 1) * 60)).padStart(2, '0');
+let forced = qs.has('h') ? parseFloat(qs.get('h')) : null;
+const names = { screen: 'MENU', projects: 'PROJETS', about: 'PARCOURS', contact: 'CONTACT' };
+let s;
+function start() {
+  s = createScene(document.getElementById('stage'), {
+    hour: forced === null ? undefined : forced,
+    quality: qs.get('q') || undefined,
+    diveDuration: qs.has('dd') ? parseFloat(qs.get('dd')) : undefined,
+    onSelect: go
+  });
+  window.__s3 = s;
+}
+function go(key) {
+  s.dive(() => {
+    flash.classList.add('on'); msg.textContent = 'ICI : LE JEU 2D → ' + names[key]; msg.classList.add('on');
+    setTimeout(() => { s.dispose(); document.getElementById('stage').innerHTML = ''; start(); flash.classList.remove('on'); msg.classList.remove('on'); }, 1800);
+  });
+}
+start();
+hr.value = forced === null ? real() : forced; out.textContent = fmt(+hr.value);
+hr.addEventListener('input', () => { forced = +hr.value; out.textContent = fmt(forced); s.setHour(forced); });
+document.getElementById('now').addEventListener('click', () => { forced = null; hr.value = real(); out.textContent = fmt(real()); s.setHour(undefined); });
+document.getElementById('dive').addEventListener('click', () => go('screen'));
+</script>
+</body>
+</html>

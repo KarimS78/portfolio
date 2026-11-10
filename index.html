@@ -620,7 +620,18 @@ footer{border-top:2px solid var(--line);margin-top:40px;padding:24px 18px;text-a
 :focus-visible{outline:2px solid var(--teal);outline-offset:3px;}
 .langG{font-family:var(--px);font-size:.55rem;color:var(--amber);background:var(--panel);border:2px solid var(--line);padding:8px 10px;cursor:pointer;margin-left:12px;}
 .langG:hover{border-color:var(--amber);}
+
+/* ============ INTRO 3D (arcade/scene3d.js) — la scène SVG reste le repli ============ */
+#scene3d{position:absolute;inset:0;opacity:0;transition:opacity .8s ease;}
+#intro.has3d #scene3d{opacity:1;}
+#intro.has3d .scene{display:none;}
+#intro.has3d .scene-wrap{position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;align-items:center;pointer-events:none;padding:18px 18px 22px;}
+#intro.has3d .titlebar{margin:0;}
+#intro.has3d .startbar{margin:0;pointer-events:auto;background:rgba(12,10,22,.6);padding:12px 20px;}
+#intro.diving3d .titlebar,#intro.diving3d .startbar{animation:fadeq .35s ease forwards;}
+body.s3 .crt{opacity:.4;}
 </style>
+<script type="importmap">{"imports":{"three":"./arcade/vendor/three.module.min.js","three/addons/":"./arcade/vendor/addons/"}}<\/script>
 </head>
 <body>
 <div class="crt"></div>
@@ -628,6 +639,7 @@ footer{border-top:2px solid var(--line);margin-top:40px;padding:24px 18px;text-a
 
 <!-- ============ INTRO / TITLE SCREEN ============ -->
 <div id="intro">
+  <div id="scene3d"></div>
   <div class="scene-wrap">
     <div class="titlebar px">KARIM<small>.EXE</small></div>
 
@@ -807,15 +819,33 @@ footer{border-top:2px solid var(--line);margin-top:40px;padding:24px 18px;text-a
   var intro = document.getElementById('intro');
   var started = false;
 
-  function enter(){
+  var pending = null;
+  function finish(){
+    document.body.classList.add('entered'); document.body.classList.remove('s3'); window.scrollTo(0,0);
+    if(pending) show(pending);
+    if(window.__s3){ try{ window.__s3.dispose(); }catch(e){} window.__s3 = null; }
+  }
+  function enter(key){
     if(started) return; started = true;
-    if(reduce){ document.body.classList.add('entered'); window.scrollTo(0,0); return; }
-    intro.classList.add('diving');
+    pending = (typeof key === 'string' && screens[key]) ? key : null;
+    if(reduce){ finish(); return; }
     var flash=document.getElementById('flash');
+    if(window.__s3){
+      /* décor 3D : la caméra plonge dans l'écran, puis le flash */
+      intro.classList.add('diving3d');
+      window.__s3.dive(function(){
+        flash.classList.add('on');
+        setTimeout(finish, 580);
+        setTimeout(function(){ flash.classList.add('off'); }, 660);
+      });
+      return;
+    }
+    intro.classList.add('diving');
     setTimeout(function(){ flash.classList.add('on'); }, 900);
-    setTimeout(function(){ document.body.classList.add('entered'); window.scrollTo(0,0); }, 1480);
+    setTimeout(finish, 1480);
     setTimeout(function(){ flash.classList.add('off'); }, 1560);
   }
+  window.__arcadeEnter = enter;
   document.getElementById('startBtn').addEventListener('click', enter);
   intro.addEventListener('click', function(e){ if(e.target.id!=='startBtn') enter(); });
   document.addEventListener('keydown', function(e){
@@ -860,10 +890,32 @@ footer{border-top:2px solid var(--line);margin-top:40px;padding:24px 18px;text-a
     }
     if(buf) el.appendChild(document.createTextNode(buf));
   }
-  function apply(){ document.querySelectorAll('[data-en]').forEach(function(el){ var v=el.getAttribute('data-'+lang); if(v!==null) setText(el,v); }); btn.textContent=lang==='fr'?'EN':'FR'; document.documentElement.lang=lang; }
+  function apply(){ document.querySelectorAll('[data-en]').forEach(function(el){ var v=el.getAttribute('data-'+lang); if(v!==null) setText(el,v); }); btn.textContent=lang==='fr'?'EN':'FR'; document.documentElement.lang=lang; if(window.__s3labels) window.__s3labels(lang); }
   btn.addEventListener('click',function(){ lang=lang==='fr'?'en':'fr'; apply(); });
   apply();
 })();
+<\/script>
+<script type="module">
+/* Décor 3D de l'intro : chargé seulement ici, à l'ouverture du mode arcade. Sans WebGL2 ou en mouvement réduit, la scène SVG reste. */
+var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var host = document.getElementById('scene3d'), intro = document.getElementById('intro');
+var gl = false; try{ gl = !!document.createElement('canvas').getContext('webgl2'); }catch(e){}
+if(gl && !reduce && host){
+  import('./arcade/scene3d.js').then(function(m){
+    if(document.body.classList.contains('entered') || intro.classList.contains('diving')) return;
+    var L = {
+      en:{screen:'\u25B6 DIVE IN', projects:'PROJECTS', about:'BACKGROUND', contact:'CONTACT'},
+      fr:{screen:'\u25B6 PLONGER', projects:'PROJETS', about:'PARCOURS', contact:'CONTACT'}
+    };
+    var s = m.createScene(host, {
+      labels: L[document.documentElement.lang === 'fr' ? 'fr' : 'en'],
+      onSelect: function(k){ window.__arcadeEnter(k === 'screen' ? null : k); }
+    });
+    window.__s3 = s;
+    window.__s3labels = function(l){ s.setLabels(L[l] || L.en); };
+    intro.classList.add('has3d'); document.body.classList.add('s3');
+  }).catch(function(){});
+}
 <\/script>
 </body>
 </html>
