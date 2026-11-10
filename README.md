@@ -13,6 +13,7 @@ is only downloaded when arcade mode is opened. Highlights:
 
 - 🌐 **Bilingual** EN / FR with a live language toggle
 - 🎮 **Arcade mode** — a playable, pixel-art / retro-game version of the site (tear the page from the top-right corner, or hit "Launch arcade mode")
+- 🗺️ **KARIM QUEST** — behind the screen, a 16-bit village drawn on a canvas (`arcade/quest.js`): one building per project, plus the background and contact pages; three bugs to squash; a fast-travel menu for people in a hurry
 - 🖥️ **3D intro** — a real-time 3D room (three.js, all procedural): the sky outside the window follows the visitor's local time; click the screen to dive into the game. Falls back to the pixel-art scene without WebGL2 or with reduced motion
 - ♿ Responsive, accessible, motion-reduced friendly
 - 🔎 SEO: schema.org Person, Open Graph / Twitter cards

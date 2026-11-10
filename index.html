@@ -621,6 +621,28 @@ footer{border-top:2px solid var(--line);margin-top:40px;padding:24px 18px;text-a
 .langG{font-family:var(--px);font-size:.55rem;color:var(--amber);background:var(--panel);border:2px solid var(--line);padding:8px 10px;cursor:pointer;margin-left:12px;}
 .langG:hover{border-color:var(--amber);}
 
+/* ============ KARIM QUEST (arcade/quest.js) : le village ============ */
+.q-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 auto 12px;max-width:964px;}
+.q-title{font-family:var(--px);font-size:.7rem;color:var(--teal);}
+.q-count{font-family:var(--px);font-size:.55rem;color:var(--amber);}
+.q-fast{font-family:var(--px);font-size:.55rem;color:var(--cream);background:var(--panel);border:2px solid var(--line);padding:11px 12px;min-height:40px;}
+.q-fast:hover{border-color:var(--teal);}
+.q-stage{position:relative;width:max-content;max-width:100%;margin:0 auto;border:2px solid var(--line);background:#12101F;line-height:0;}
+.q-stage canvas{display:block;image-rendering:pixelated;image-rendering:crisp-edges;cursor:pointer;outline:none;}
+.q-dialog{display:none;position:absolute;left:8px;right:8px;bottom:8px;background:#12101F;border:4px solid var(--cream);padding:12px 14px;line-height:1.25;}
+.q-dialog.on{display:block;}
+.q-name{font-size:.55rem;color:var(--amber);margin-bottom:8px;}
+.q-line{margin:0 0 10px;font-size:1.25rem;color:var(--cream);}
+.q-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.q-btn{font-size:.58rem;color:#0a2a25;background:var(--teal);border:0;padding:12px 14px;min-height:40px;box-shadow:0 4px 0 #15a98f;}
+.q-btn.alt{color:var(--cream);background:var(--panel-2);box-shadow:0 4px 0 var(--line);}
+.q-toast{position:absolute;left:8px;right:8px;top:8px;text-align:center;font-family:var(--px);font-size:.5rem;line-height:1.7;color:var(--cream);background:rgba(12,10,22,.92);border:2px solid var(--teal);padding:8px 10px;opacity:0;transition:opacity .25s;pointer-events:none;}
+.q-toast.on{opacity:1;}
+.q-help{text-align:center;color:var(--grey);font-size:1.05rem;margin:10px auto 0;max-width:720px;}
+#q-modal{display:none;position:fixed;inset:0;z-index:120;background:rgba(12,10,22,.95);overflow:auto;padding:76px 18px 40px;}
+#q-modal.on{display:block;}
+.q-modal-in{max-width:760px;margin:0 auto;}
+
 /* ============ INTRO 3D (arcade/scene3d.js) — la scène SVG reste le repli ============ */
 #scene3d{position:absolute;inset:0;opacity:0;transition:opacity .8s ease;}
 #intro.has3d #scene3d{opacity:1;}
@@ -666,8 +688,24 @@ body.s3 .crt{opacity:.4;}
 
   <div class="screenwrap">
 
-    <!-- ===== MENU ===== -->
-    <section class="screen active" id="screen-menu">
+    <!-- ===== VILLAGE (KARIM QUEST) ===== -->
+    <section class="screen active" id="screen-quest">
+      <div class="q-top">
+        <span class="q-title">KARIM QUEST</span>
+        <span class="q-count"></span>
+        <button class="q-fast" type="button" data-en="[M] FAST TRAVEL" data-fr="[M] VOYAGE RAPIDE">[M] FAST TRAVEL</button>
+      </div>
+      <div class="q-stage">
+        <canvas tabindex="0" aria-label="KARIM QUEST : a pixel-art village. Each building opens a project, the background or the contact page. The fast travel button lists the same content as a menu."></canvas>
+        <div class="q-toast" role="status"></div>
+        <div class="q-dialog"></div>
+      </div>
+      <p class="q-help" data-en="Arrow keys / WASD or tap to move. Walk up to a door to enter. In a hurry? Take the fast travel." data-fr="Flèches / ZQSD ou touche l'écran pour te déplacer. Avance jusqu'à une porte pour entrer. Pressé ? Prends le voyage rapide.">Arrow keys / WASD or tap to move. Walk up to a door to enter. In a hurry? Take the fast travel.</p>
+    </section>
+
+    <!-- ===== MENU (voyage rapide) ===== -->
+    <section class="screen" id="screen-menu">
+      <button class="back px" data-back type="button" data-en="◀ VILLAGE" data-fr="◀ VILLAGE">◀ VILLAGE</button>
       <h1 class="menu-title px" data-en="SELECT" data-fr="SÉLECTION">SELECT</h1>
       <p class="menu-sub" data-en="Cyber Security Analyst · application security · remote" data-fr="Cyber Security Analyst · sécurité applicative · remote">Cyber Security Analyst · application security · remote</p>
       <div class="panels">
@@ -810,6 +848,8 @@ body.s3 .crt{opacity:.4;}
 
   </div>
 
+  <div id="q-modal"><div class="q-modal-in"><button class="back px q-close" type="button" data-en="◀ VILLAGE" data-fr="◀ VILLAGE">◀ VILLAGE</button><div class="q-modal-body"></div></div></div>
+
   <footer><div class="foot"><span>INSERT COIN · © 2026 KARIM</span><br><span data-en="HAND-BUILT · HTML · CSS · JS" data-fr="CONSTRUIT À LA MAIN · HTML · CSS · JS">HAND-BUILT · HTML · CSS · JS</span></div></footer>
 </div>
 
@@ -854,12 +894,16 @@ body.s3 .crt{opacity:.4;}
 
   /* menu navigation */
   var screens = {
+    quest: document.getElementById('screen-quest'),
     menu: document.getElementById('screen-menu'),
     about: document.getElementById('screen-about'),
     projects: document.getElementById('screen-projects'),
     contact: document.getElementById('screen-contact')
   };
+  var cur = 'quest', from = 'quest';
   function show(key){
+    if(key !== cur){ from = cur; cur = key; }
+    var qm = document.getElementById('q-modal'); if(qm) qm.classList.remove('on');
     Object.keys(screens).forEach(function(k){ screens[k].classList.toggle('active', k===key); });
     window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'});
   }
@@ -867,9 +911,10 @@ body.s3 .crt{opacity:.4;}
     p.addEventListener('click', function(){ show(p.getAttribute('data-go')); });
   });
   document.querySelectorAll('[data-back]').forEach(function(b){
-    b.addEventListener('click', function(){ show('menu'); });
+    b.addEventListener('click', function(){ show(cur !== 'menu' && from === 'menu' ? 'menu' : 'quest'); });
   });
-  document.getElementById('homeBtn').addEventListener('click', function(e){ e.preventDefault(); show('menu'); });
+  document.getElementById('homeBtn').addEventListener('click', function(e){ e.preventDefault(); show('quest'); });
+  window.__arcadeShow = show;
 })();
 <\/script>
 <script>
@@ -892,9 +937,11 @@ body.s3 .crt{opacity:.4;}
   }
   function apply(){ document.querySelectorAll('[data-en]').forEach(function(el){ var v=el.getAttribute('data-'+lang); if(v!==null) setText(el,v); }); btn.textContent=lang==='fr'?'EN':'FR'; document.documentElement.lang=lang; if(window.__s3labels) window.__s3labels(lang); }
   btn.addEventListener('click',function(){ lang=lang==='fr'?'en':'fr'; apply(); });
+  window.__applyLang=apply;
   apply();
 })();
 <\/script>
+<script src="./arcade/quest.js"><\/script>
 <script type="module">
 /* Décor 3D de l'intro : chargé seulement ici, à l'ouverture du mode arcade. Sans WebGL2 ou en mouvement réduit, la scène SVG reste. */
 var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
