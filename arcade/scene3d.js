@@ -215,6 +215,7 @@ export function createScene(container, opts = {}) {
   const codeLines = (() => { const r = rng(5), cols = ['#34e0c4', '#f2b441', '#e0567e', '#f3ecde', '#7fb2ff'], L = [];
     for (let i = 0; i < 60; i++) { const ind = Math.floor(r() * 4), toks = []; let n = 1 + Math.floor(r() * 4);
       if (r() < 0.12) n = 0; for (let k = 0; k < n; k++) toks.push([cols[Math.floor(r() * cols.length)], 18 + r() * 70]); L.push([ind, toks]); } return L; })();
+  const monitorMsg = { until: -1, a: '', b: '', color: '#34e0c4' };
   function drawCode(t) {
     const g = codeCtx; g.fillStyle = '#0a1317'; g.fillRect(0, 0, 512, 288);
     g.fillStyle = '#12101f'; g.fillRect(0, 0, 512, 22); g.fillStyle = '#34e0c4'; g.fillRect(10, 7, 60, 8); g.fillStyle = '#34315a'; g.fillRect(80, 7, 50, 8); g.fillRect(140, 7, 50, 8);
@@ -224,6 +225,8 @@ export function createScene(container, opts = {}) {
       g.fillStyle = '#34315a'; g.fillRect(10, y, 14, 6); let x = 44 + ln[0] * 18;
       for (const tk of ln[1]) { g.fillStyle = tk[0]; g.fillRect(x, y, tk[1], 6); x += tk[1] + 8; } }
     if (Math.floor(t * 2) % 2) { g.fillStyle = '#f3ecde'; g.fillRect(44, 276, 8, 8); }
+    if (t < monitorMsg.until) { g.fillStyle = 'rgba(10,19,23,.92)'; g.fillRect(40, 84, 432, 120); g.strokeStyle = monitorMsg.color; g.lineWidth = 4; g.strokeRect(42, 86, 428, 116); g.textAlign = 'center';
+      g.fillStyle = monitorMsg.color; g.font = 'bold 26px monospace'; g.fillText(monitorMsg.a, 256, 136); g.fillStyle = '#f3ecde'; g.font = '18px monospace'; g.fillText(monitorMsg.b, 256, 172); g.textAlign = 'left'; }
     codeTex.needsUpdate = true;
   }
   drawCode(0);
@@ -238,9 +241,9 @@ export function createScene(container, opts = {}) {
   box(0.38, 0.02, 0.135, plasticM, 0.46, 0.787, -1.3, 0.006);
   const keys = plane(0.36, 0.12, new THREE.MeshBasicMaterial({ map: keyTex, color: new THREE.Color(0.9, 0.9, 0.9) }), 0.46, 0.7985, -1.3); keys.rotation.x = -Math.PI / 2;
   const mouse = ball(0.03, plasticM, 0.78, 0.79, -1.3); mouse.scale.set(1, 0.55, 1.6);
-  box(0.006, 0.004, 0.03, glow(PAL.teal, 3), 0.78, 0.806, -1.3, 0);
+  const mouseLed = box(0.006, 0.004, 0.03, glow(PAL.teal, 3), 0.78, 0.806, -1.3, 0);
   // tasse, dé, console portable, plante
-  cyl(0.04, 0.035, 0.09, M(PAL.magenta, { roughness: 0.3 }), 0.13, 0.82, -1.32);
+  const mug = cyl(0.04, 0.035, 0.09, M(PAL.magenta, { roughness: 0.3 }), 0.13, 0.82, -1.32);
   const d20 = add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.028, 0), M(PAL.amber, { roughness: 0.25, metalness: 0.2, flatShading: true })), 0.96, 0.8, -1.5); d20.rotation.set(0.4, 0.6, 0.2);
   const handheld = new THREE.Group(); handheld.position.set(-0.15, 0.785, -1.2); handheld.rotation.y = 0.5; scene.add(handheld);
   box(0.2, 0.016, 0.085, M(PAL.cream, { roughness: 0.4 }), 0, 0, 0, 0.008, handheld);
@@ -293,14 +296,62 @@ export function createScene(container, opts = {}) {
   const band = add(new THREE.Mesh(new THREE.TorusGeometry(0.122, 0.011, 10, 32, Math.PI), plasticM), 0, 0.01, 0, head);
   for (const sx of [-1, 1]) { const cup = cyl(0.045, 0.045, 0.035, plasticM, sx * 0.125, -0.005, 0, head); cup.rotation.z = Math.PI / 2;
     const ringL = add(new THREE.Mesh(new THREE.TorusGeometry(0.036, 0.004, 8, 24), glow(PAL.teal, 2.6)), sx * 0.144, -0.005, 0, head); ringL.rotation.y = Math.PI / 2; }
-  // bras vers le clavier, jambes sous le bureau
-  const arms = [];
+  // jambes sous le bureau
   for (const sx of [-1, 1]) {
-    capsule(0.055, 0.2, hoodie, [sx * 0.21, 0.95, 0], [sx * 0.24, 0.72, -0.14], me);
-    const fore = new THREE.Group(); fore.position.set(sx * 0.24, 0.72, -0.14); me.add(fore); arms.push(fore);
-    capsule(0.048, 0.2, hoodie, [0, 0, 0], [-sx * 0.12, 0.09, -0.3], fore); ball(0.04, skin, -sx * 0.13, 0.09, -0.34, fore);
     capsule(0.075, 0.3, jeans, [sx * 0.1, 0.55, 0.02], [sx * 0.12, 0.53, -0.4], me); capsule(0.06, 0.3, jeans, [sx * 0.12, 0.53, -0.4], [sx * 0.12, 0.1, -0.46], me);
     box(0.1, 0.07, 0.24, M(PAL.cream, { roughness: 0.5 }), sx * 0.12, 0.04, -0.52, 0.03, me);
+  }
+  // bras articulés : deux segments, les mains suivent des cibles animées (taper, souris, boire, s'étirer)
+  const L1 = 0.27, L2 = 0.3, armRig = [], Y = new THREE.Vector3(0, 1, 0);
+  for (const sx of [-1, 1]) {
+    const up = add(new THREE.Mesh(new THREE.CapsuleGeometry(0.055, L1, 6, 14), hoodie), 0, 0, 0, me);
+    const fo = add(new THREE.Mesh(new THREE.CapsuleGeometry(0.048, L2, 6, 14), hoodie), 0, 0, 0, me);
+    const hand = ball(0.04, skin, 0, 0, 0, me);
+    armRig.push({ up, fo, hand, S: new THREE.Vector3(sx * 0.21, 0.95, 0), H: new THREE.Vector3(), E: new THREE.Vector3(), pole: new THREE.Vector3(sx * 0.8, -0.6, 0.15).normalize() });
+  }
+  me.attach(mug); me.attach(mouse); mouse.attach(mouseLed);
+  const mugHome = mug.position.clone(), mouseHome = mouse.position.clone();
+  const KEY = [new THREE.Vector3(-0.13, 0.83, -0.5), new THREE.Vector3(0.05, 0.83, -0.5)];
+  const GRAB = mugHome.clone().add(new THREE.Vector3(0.0, 0.0, 0.07)), MOUTH = new THREE.Vector3(-0.05, 1.15, -0.12), MOUSEH = mouseHome.clone().add(new THREE.Vector3(0, 0.035, 0.02));
+  const ik1 = new THREE.Vector3(), ik2 = new THREE.Vector3();
+  function limb(mesh, a, b) { mesh.position.copy(a).add(b).multiplyScalar(0.5); mesh.quaternion.setFromUnitVectors(Y, ik1.copy(b).sub(a).normalize()); }
+  function solveArm(r) {
+    ik1.copy(r.H).sub(r.S); const raw = ik1.length(), len = Math.min(Math.max(raw, 0.08), L1 + L2 - 0.005); ik1.multiplyScalar(1 / raw);
+    const a = (L1 * L1 - L2 * L2 + len * len) / (2 * len), h = Math.sqrt(Math.max(0, L1 * L1 - a * a));
+    ik2.copy(r.pole).addScaledVector(ik1, -r.pole.dot(ik1)).normalize();
+    r.E.copy(r.S).addScaledVector(ik1, a).addScaledVector(ik2, h); r.hand.position.copy(r.S).addScaledVector(ik1, len);
+    const hp = r.hand.position.clone(); limb(r.up, r.S, r.E); limb(r.fo, r.E, hp);
+  }
+  let action = null, nextAction = 5, hp = 2, drinkHealed = false;
+  function startAction(name, t) { if (action && action.name === name) return; action = { name, t0: t }; drinkHealed = false; }
+  function animateMe(t) {
+    if (!action && t > nextAction) { const r = Math.random(); startAction(r < 0.45 ? 'mouse' : r < 0.7 ? 'drink' : r < 0.85 ? 'stretch' : 'look', t); }
+    const L = armRig[0], R = armRig[1]; let held = null, headY = Math.sin(t * 0.35) * 0.1, headX = Math.sin(t * 0.5) * 0.03, lean = 0;
+    L.H.copy(KEY[0]); R.H.copy(KEY[1]);
+    L.H.y += Math.abs(Math.sin(t * 11)) * 0.008; R.H.y += Math.abs(Math.sin(t * 11 + 1.3)) * 0.008; L.H.x += Math.sin(t * 2.3) * 0.015; R.H.x += Math.sin(t * 1.9 + 2) * 0.015;
+    mug.position.copy(mugHome); mug.rotation.set(0, 0, 0); mouse.position.copy(mouseHome);
+    if (action) {
+      const u = action.hold !== undefined ? action.hold : t - action.t0; let dur = 4;
+      if (action.name === 'mouse') {
+        const k = smooth(0, 0.4, u) * (1 - smooth(3.6, 4, u)), wx = Math.sin(u * 5) * 0.03 * k, wz = Math.cos(u * 3.7) * 0.02 * k;
+        R.H.lerp(ik2.copy(MOUSEH).add(ik1.set(wx, 0, wz)), k); mouse.position.x += wx; mouse.position.z += wz; headY *= 0.3;
+      } else if (action.name === 'drink') {
+        dur = 4.2; const g = smooth(0, 0.6, u) * (1 - smooth(3.5, 4.1, u)), m = smooth(0.7, 1.4, u) * (1 - smooth(2.6, 3.3, u)), sip = smooth(1.3, 1.7, u) * (1 - smooth(2.3, 2.6, u));
+        L.H.lerp(GRAB, g).lerp(MOUTH, m);
+        if (u > 0.6 && u < 3.5) held = { m, sip };
+        headX += sip * 0.32; headY *= 1 - m;
+        if (sip > 0.9 && !drinkHealed) { drinkHealed = true; if (hp < 3) { hp = 3; drawHearts(); toast('+HP · ' + '♥'.repeat(hp)); } }
+      } else if (action.name === 'stretch') {
+        dur = 3.6; const k = smooth(0, 0.9, u) * (1 - smooth(2.6, 3.5, u));
+        L.H.lerp(ik1.set(-0.36, 1.4, 0.1), k); R.H.lerp(ik1.set(0.36, 1.4, 0.1), k); lean = k; headX += k * 0.25;
+      } else if (action.name === 'look') {
+        const k = smooth(0, 0.8, u) * (1 - smooth(3.1, 3.9, u)); headY = lerp(headY, 0.75, k);
+      }
+      if (u > dur) { action = null; nextAction = t + 5 + Math.random() * 7; }
+    }
+    head.rotation.set(headX, headY, 0); me.rotation.x = lean * 0.07;
+    solveArm(L); solveArm(R);
+    if (held) { mug.position.copy(L.hand.position); mug.position.z -= 0.07 * (1 - held.m) + 0.045 * held.m; mug.position.y += 0.02 * held.m; mug.rotation.x = held.sip * 0.9; }
   }
 
   /* ---------------- coin rétro : télé cathodique, console, cartouches ---------------- */
@@ -310,8 +361,14 @@ export function createScene(container, opts = {}) {
   const tvCanvas = document.createElement('canvas'); tvCanvas.width = 160; tvCanvas.height = 120; const tvCtx = tvCanvas.getContext('2d');
   const tvTex = new THREE.CanvasTexture(tvCanvas); tvTex.colorSpace = THREE.SRGBColorSpace; tvTex.magFilter = THREE.NearestFilter;
   let fontOk = false;
+  let tvMode = 0;
   function drawTV(t) {
-    const g = tvCtx; g.fillStyle = '#2f7d4f'; g.fillRect(0, 0, 160, 120);
+    const g = tvCtx;
+    if (tvMode === 1) { g.fillStyle = '#12101f'; g.fillRect(0, 0, 160, 120); const cols = ['#e0567e', '#f2b441', '#34e0c4', '#7fb2ff'];
+      for (let r = 0; r < 4; r++) for (let c = 0; c < 9; c++) if ((r * 9 + c + Math.floor(t / 3)) % 7) { g.fillStyle = cols[r]; g.fillRect(8 + c * 16, 10 + r * 9, 14, 7); }
+      const bx = 80 + Math.sin(t * 1.7) * 62, by = 62 + Math.abs(Math.sin(t * 2.3)) * 40; g.fillStyle = '#f3ecde'; g.fillRect(bx - 2, by - 2, 4, 4); g.fillRect(bx - 12, 110, 24, 4); tvTex.needsUpdate = true; return; }
+    if (tvMode === 2) { for (let y = 0; y < 120; y += 4) for (let x = 0; x < 160; x += 4) { const v = Math.floor(Math.random() * 200); g.fillStyle = 'rgb(' + v + ',' + v + ',' + v + ')'; g.fillRect(x, y, 4, 4); }
+      g.fillStyle = '#12101f'; g.fillRect(40, 50, 80, 20); g.fillStyle = '#f3ecde'; g.textAlign = 'center'; g.font = (fontOk ? '7px ' : 'bold 9px ') + FONT; g.fillText('NO SIGNAL', 80, 64); tvTex.needsUpdate = true; return; } g.fillStyle = '#2f7d4f'; g.fillRect(0, 0, 160, 120);
     g.fillStyle = '#2b6fb0'; g.fillRect(104, 0, 56, 30); g.fillStyle = '#d9c38a'; g.fillRect(0, 62, 160, 10); g.fillRect(76, 0, 10, 86);
     g.fillStyle = '#f3ecde'; g.fillRect(18, 30, 32, 22); g.fillStyle = '#1f9c88'; g.fillRect(18, 22, 32, 10); g.fillStyle = '#12101f'; g.fillRect(30, 40, 8, 12);
     g.fillStyle = '#f3ecde'; g.fillRect(112, 38, 30, 20); g.fillStyle = '#e0567e'; g.fillRect(112, 30, 30, 10);
@@ -359,10 +416,12 @@ export function createScene(container, opts = {}) {
   const neonM = new THREE.MeshStandardMaterial({ color: 0, emissive: PAL.teal, emissiveMap: neonTex, emissiveIntensity: 2.4, transparent: true, alphaMap: neonTex, depthWrite: false });
   const neon = plane(1.1, 0.2, neonM, 0.5, 1.95, -1.99); neon.receiveShadow = false;
   const neonLight = new THREE.PointLight(PAL.teal, 0.5, 2.5, 1.8); neonLight.position.set(0.5, 1.95, -1.8); scene.add(neonLight);
-  const heartTex = canvasTex(96, 32, (g) => { g.clearRect(0, 0, 96, 32); const H = ['0110110', '1111111', '1111111', '0111110', '0011100', '0001000'];
-    for (let k = 0; k < 3; k++) H.forEach((row, y) => [...row].forEach((v, x) => { if (v === '1') { g.fillStyle = k === 2 ? '#555' : '#fff'; g.fillRect(4 + k * 32 + x * 3.5, 5 + y * 3.5, 3.5, 3.5); } })); });
+  const heartTex = canvasTex(96, 32, () => {});
+  function drawHearts() { const g = heartTex.image.getContext('2d'); g.clearRect(0, 0, 96, 32); const H = ['0110110', '1111111', '1111111', '0111110', '0011100', '0001000'];
+    for (let k = 0; k < 3; k++) H.forEach((row, y) => [...row].forEach((v, x) => { if (v === '1') { g.fillStyle = k >= hp ? '#444' : '#fff'; g.fillRect(4 + k * 32 + x * 3.5, 5 + y * 3.5, 3.5, 3.5); } })); heartTex.needsUpdate = true; }
   heartTex.magFilter = THREE.NearestFilter;
   const hearts = plane(0.54, 0.18, new THREE.MeshStandardMaterial({ color: 0, emissive: PAL.magenta, emissiveMap: heartTex, emissiveIntensity: 2.6, transparent: true, alphaMap: heartTex, depthWrite: false }), 1.2, 2.33, -1.99); hearts.receiveShadow = false;
+  drawHearts();
   // mur gauche : tableau en liège (parcours) + affiches pixel
   const board = new THREE.Group(); board.position.set(2.49, 1.5, -0.95); board.rotation.y = -Math.PI / 2; scene.add(board);
   box(1.05, 0.72, 0.025, M(0x9a6b45, { roughness: 0.95 }), 0, 0, 0, 0.004, board);
@@ -389,7 +448,8 @@ export function createScene(container, opts = {}) {
   const C = (h) => new THREE.Color(h);
   const K = { nTop: C(0x04050f), nHor: C(0x101737), dTop: C(0x1a55c4), dHor: C(0x86bdf5), tTop: C(0x2b2a66), tHor: C(0xff7b45), ground: C(0x1a1d2a) };
   const sunDir = new THREE.Vector3(), moonDir = new THREE.Vector3(), tmpC = new THREE.Color();
-  let lastHour = -1;
+  let lastHour = -1, lampBase = 0, lampOverride = null;
+  function setLamp() { const on = lampOverride === null ? lampBase : (lampOverride ? 1 : 0); lamp.intensity = 14 * on; bulb.material.emissiveIntensity = 4 * on; }
   function currentHour() { if (typeof opts.hour === 'number') return opts.hour; const d = new Date(); return d.getHours() + d.getMinutes() / 60; }
   function applyTime(h) {
     lastHour = h;
@@ -413,7 +473,7 @@ export function createScene(container, opts = {}) {
     skyFill.color.copy(skyU.uHor.value).lerp(skyU.uTop.value, 0.4); skyFill.intensity = 10 * day + 3 * twi + 0.25 * night;
     scene.environmentIntensity = 0.1 + 0.3 * day;
     const L = 1 - smooth(0.1, 0.45, e);               // lampes d'intérieur : allumées dès que le jour baisse
-    lamp.intensity = 14 * L; bulb.material.emissiveIntensity = 4 * L; ceil.intensity = 2.2 * L;
+    lampBase = L; setLamp(); ceil.intensity = 2.2 * L;
     screenLight.intensity = 0.7 + 1.1 * L; led.intensity = 0.4 + 0.9 * L; neonLight.intensity = 0.25 + 0.6 * L; tvLight.intensity = 0.3 + 0.5 * L; crystalLight.intensity = 0.3 + 0.6 * L;
     cityM.emissiveIntensity = 2.2 * (1 - smooth(-0.05, 0.3, e));
     dustM.opacity = 0.3 * smooth(0.02, 0.3, e);
@@ -464,7 +524,8 @@ export function createScene(container, opts = {}) {
   }
   function onDown(ev) { dragging = true; moved = 0; lx = ev.clientX; ly = ev.clientY; }
   function onUp() { dragging = false; }
-  function onClickCapture(ev) { if (moved > 8) { ev.stopPropagation(); ev.preventDefault(); } moved = 0; }
+  function onClickCapture(ev) { if (moved > 8) { ev.stopPropagation(); ev.preventDefault(); moved = 0; return; } moved = 0;
+    if (!diving && ev.target === el) { const o = pick(ev); if (o) { ev.stopPropagation(); ev.preventDefault(); o.userData.fn(); } } }
   el.addEventListener('pointerdown', onDown); window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp); window.addEventListener('pointercancel', onUp);
   container.addEventListener('click', onClickCapture, true);
 
@@ -495,6 +556,54 @@ export function createScene(container, opts = {}) {
       tags[k].style.transform = 'translate(-50%,-100%) translate(' + ((v.x * 0.5 + 0.5) * w).toFixed(1) + 'px,' + ((-v.y * 0.5 + 0.5) * h - 16).toFixed(1) + 'px)'; }
   }
 
+  /* ---------------- easter eggs ---------------- */
+  const toastEl = document.createElement('div'); toastEl.className = 's3-toast'; toastEl.setAttribute('role', 'status'); container.appendChild(toastEl);
+  style.textContent += '.s3-toast{position:absolute;left:50%;top:64px;transform:translateX(-50%);max-width:92%;text-align:center;font-family:' + FONT + ';font-size:10px;line-height:1.7;color:#F3ECDE;background:rgba(12,10,22,.92);border:2px solid #34E0C4;padding:10px 14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:3}.s3-toast.on{opacity:1}.s3-toast b{color:#F2B441;font-weight:normal;display:block;font-size:8px}';
+  const found = new Set(), EGGS = 8; let toastTimer = 0;
+  function toast(msg, egg) {
+    let sub = ''; if (egg) { const isNew = !found.has(egg); found.add(egg); sub = '<b>' + (isNew ? 'SECRET ' : 'SECRETS ') + found.size + '/' + EGGS + (found.size === EGGS && isNew ? ' · 100% !' : '') + '</b>'; }
+    toastEl.textContent = msg; if (sub) toastEl.insertAdjacentHTML('beforeend', sub); toastEl.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('on'), 2600);
+  }
+  let partyUntil = -1, crystalSpin = 0, crystalPulse = -9, diceRoll = null, starAt = 8, starT0 = -9, now = 0;
+  const hits = [];
+  function hit(x, y, z, r, fn, parent) { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), new THREE.MeshBasicMaterial()); m.position.set(x, y, z); m.visible = false; m.userData.fn = fn; (parent || scene).add(m); hits.push(m); return m; }
+  hit(-2.1, 0.8, -1.45, 0.24, () => { crystalPulse = now; toast('GAME SAVED', 'save'); });
+  hit(0.96, 0.8, -1.5, 0.07, () => { if (!diceRoll) diceRoll = { t0: now, n: 1 + Math.floor(Math.random() * 20) }; });
+  hit(1.2, 2.33, -1.98, 0.2, () => { hp = Math.max(0, hp - 1); drawHearts(); toast(hp ? '-1 HP · ' + '♥'.repeat(hp) : 'GAME OVER · CONTINUE? CLICK THE MUG', 'hearts'); }).scale.set(1.6, 0.6, 0.4);
+  hit(-0.13, 1.24, -1.5, 0.11, () => { lampOverride = !(lampOverride === null ? lampBase > 0.5 : lampOverride); setLamp(); toast(lampOverride ? 'LIGHT ON' : 'LIGHT OFF', 'lamp'); });
+  hit(1.91, 0.775, -1.5, 0.22, () => { tvMode = (tvMode + 1) % 3; toast('CH ' + (tvMode + 1), 'tv'); });
+  hit(0, 0, 0, 0.075, () => { startAction('drink', now); toast('COFFEE BREAK', 'mug'); }, mug);
+  hit(2.17, 2.06, -1.9, 0.13, () => { tvMode = 1; toast('INSERT COIN', 'tv'); });
+  // étoile filante la nuit
+  const star = new THREE.Mesh(new THREE.BoxGeometry(5, 0.12, 0.12), new THREE.MeshBasicMaterial({ color: new THREE.Color(4, 4, 5), fog: false })); star.visible = false; star.rotation.z = -0.35; scene.add(star);
+  function animateEggs(t) {
+    now = t;
+    if (diceRoll) { const u = (t - diceRoll.t0) / 0.9; d20.rotation.set(0.4 + u * 14, 0.6 + u * 9, 0.2); d20.position.y = 0.8 + Math.sin(Math.min(u, 1) * Math.PI) * 0.12;
+      if (u >= 1) { d20.position.y = 0.8; toast('D20 → ' + diceRoll.n + (diceRoll.n === 20 ? ' · CRITICAL HIT!' : diceRoll.n === 1 ? ' · CRITICAL FAIL…' : ''), 'd20'); diceRoll = null; } }
+    const cp = t - crystalPulse; crystalSpin = cp < 1.2 ? (1 - cp / 1.2) * 12 * cp : 0; crystal.scale.setScalar(1 + (cp < 0.6 ? Math.sin(cp / 0.6 * Math.PI) * 0.35 : 0)); crystal.scale.y *= 1.5;
+    if (t < partyUntil) { const h = (t * 0.9) % 1; led.color.setHSL(h, 1, 0.5); neonLight.color.setHSL((h + 0.3) % 1, 1, 0.5); neonM.emissive.setHSL((h + 0.3) % 1, 1, 0.5); screenLight.color.setHSL((h + 0.6) % 1, 1, 0.5); ceil.color.setHSL((h + 0.5) % 1, 1, 0.55); ceil.intensity = 3; partyWas = true; }
+    else if (partyWas) { partyWas = false; led.color.set(PAL.magenta); neonLight.color.set(PAL.teal); neonM.emissive.set(PAL.teal); screenLight.color.set(PAL.teal); ceil.color.set(0xffb070); applyTime(currentHour()); }
+    if (skyU.uNight.value > 0.6 && t > starAt && !star.visible) { star.visible = true; starT0 = t; star.userData.x = -45 + Math.random() * 30; star.userData.y = 26 + Math.random() * 12; }
+    if (star.visible) { const u = (t - starT0) / 0.9; star.position.set(star.userData.x + u * 34, star.userData.y - u * 12, -95); star.scale.x = Math.sin(Math.min(u, 1) * Math.PI) + 0.01; if (u >= 1) { star.visible = false; starAt = t + 9 + Math.random() * 14; } }
+  }
+  let partyWas = false;
+  const SEQ = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']; let seqI = 0, typed = '';
+  function onKey(ev) {
+    if (diving) return; const k = ev.key.length === 1 ? ev.key.toLowerCase() : ev.key;
+    seqI = k === SEQ[seqI] ? seqI + 1 : (k === SEQ[0] ? 1 : 0);
+    if (seqI === SEQ.length) { seqI = 0; partyUntil = now + 10; hp = 3; drawHearts(); toast('CHEAT ACTIVATED · PARTY MODE', 'cheat'); }
+    if (k.length === 1) { typed = (typed + k).slice(-8);
+      if (typed.endsWith('sudo')) { Object.assign(monitorMsg, { until: now + 4, a: 'PERMISSION DENIED', b: 'nice try. least privilege, always.', color: '#e0567e' }); toast('sudo: nope', 'hack'); }
+      else if (typed.endsWith('xss')) { Object.assign(monitorMsg, { until: now + 4, a: '<script> BLOCKED', b: 'output encoded + CSP. next?', color: '#34e0c4' }); toast('XSS BLOCKED', 'hack'); }
+      else if (typed.endsWith('sqli')) { Object.assign(monitorMsg, { until: now + 4, a: "' OR 1=1 --  REJECTED", b: 'parameterized queries only.', color: '#f2b441' }); toast('SQLi BLOCKED', 'hack'); } }
+  }
+  window.addEventListener('keydown', onKey);
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  function pick(ev) { const r = el.getBoundingClientRect(); ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const h = ray.intersectObjects(hits, false); return h.length ? h[0].object : null; }
+  let lastHover = 0;
+  function onHover(ev) { if (ev.pointerType !== 'mouse' || diving) return; const t = performance.now(); if (t - lastHover < 80) return; lastHover = t; el.style.cursor = pick(ev) ? 'pointer' : ''; }
+  el.addEventListener('pointermove', onHover);
+
   /* ---------------- boucle ---------------- */
   const clock = new THREE.Clock(); let raf = 0, alive = true, lastCode = -1, lastTimeCheck = -100, frames = 0;
   function frame() {
@@ -504,10 +613,9 @@ export function createScene(container, opts = {}) {
     if (t - lastTimeCheck > 20) { lastTimeCheck = t; const h = currentHour(); if (Math.abs(h - lastHour) > 0.01) applyTime(h); }
     if (t - lastCode > 0.09) { lastCode = t; drawCode(t); drawTV(t); }
     skyU.uTime.value = t;
-    crystal.rotation.y = t * 0.8; crystal.position.y = 0.8 + Math.sin(t * 1.4) * 0.03;
-    fans.forEach((f, i) => { f.rotation.z = t * (5 + i); });
-    head.rotation.y = Math.sin(t * 0.35) * 0.1; head.rotation.x = Math.sin(t * 0.5) * 0.03;
-    arms[0].position.y = 0.72 + Math.abs(Math.sin(t * 9)) * 0.006; arms[1].position.y = 0.72 + Math.abs(Math.sin(t * 9 + 1.3)) * 0.006;
+    crystal.rotation.y = t * 0.8 + crystalSpin; crystal.position.y = 0.8 + Math.sin(t * 1.4) * 0.03;
+    fans.forEach((f, i) => { f.rotation.z = t * (5 + i) * (t < partyUntil ? 4 : 1); });
+    animateMe(t); animateEggs(t);
     torso.scale.y = 1 + Math.sin(t * 1.1) * 0.008;
     const p = dustG.attributes.position; for (let i = 0; i < dustN; i++) { let y = p.getY(i) + 0.0006; if (y > 2.5) y = 0.2; p.setY(i, y); p.setX(i, p.getX(i) + Math.sin(t * 0.3 + i) * 0.0003); } p.needsUpdate = true;
     placeCamera(t); placeTags();
@@ -529,8 +637,8 @@ export function createScene(container, opts = {}) {
     dive(cb) { if (diving) return; diving = { t0: clock.getElapsedTime(), dur: opts.diveDuration || 1.7, ctrl: new THREE.Vector3(-0.1, 1.62, -0.35), to: new THREE.Vector3(SCREEN.x, SCREEN.y, -1.36), cb }; },
     setLabels(l) { labels = Object.assign(labels, l); for (const k in tags) tags[k].textContent = labels[k]; },
     setHour(h) { opts.hour = h; applyTime(currentHour()); },
-    frames() { return frames; },
-    dispose() { alive = false; cancelAnimationFrame(raf); ro.disconnect(); window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); window.removeEventListener('pointercancel', onUp);
+    frames() { return frames; }, _act(n, hold) { action = null; startAction(n, clock.getElapsedTime()); if (hold !== undefined) action.hold = hold; }, _egg(i) { hits[i].userData.fn(); }, _state() { return JSON.stringify({ a: action && action.name, t: clock.getElapsedTime().toFixed(2), t0: action && action.t0.toFixed(2), mug: mug.position.toArray().map(v => +v.toFixed(2)), hand: armRig[0].hand.position.toArray().map(v => +v.toFixed(2)), headX: head.rotation.x.toFixed(2) }); },
+    dispose() { alive = false; cancelAnimationFrame(raf); ro.disconnect(); window.removeEventListener('keydown', onKey); clearTimeout(toastTimer); toastEl.remove(); window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); window.removeEventListener('pointercancel', onUp);
       container.removeEventListener('click', onClickCapture, true); scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach((m) => { for (const k in m) if (m[k] && m[k].isTexture) m[k].dispose(); m.dispose(); }); } });
       composer.dispose(); target.dispose(); pmrem.dispose(); renderer.dispose(); for (const k in tags) tags[k].remove(); style.remove(); el.remove(); }
   };
