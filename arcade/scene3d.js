@@ -543,8 +543,8 @@ export function createScene(container, opts = {}) {
       camera.position.set(u * u * a.x + 2 * u * s * c.x + s * s * b.x, u * u * a.y + 2 * u * s * c.y + s * s * b.y, u * u * a.z + 2 * u * s * c.z + s * s * b.z);
       look.copy(diving.look).lerp(SCREEN, Math.min(1, s * 1.6)); camera.lookAt(look);
       camera.fov = lerp(diving.fov, 30, s2); camera.updateProjectionMatrix();
-      screen.material.color.setScalar(1.5 + s2 * 6); bloom.strength = 0.42 + s2 * 1.4;
-      if (k >= 1 && !diving.done) { diving.done = true; diving.cb && diving.cb(); }
+      screen.material.color.setScalar(1.5 + s2 * 2.5); bloom.strength = 0.42 + s2 * 0.45;
+      if (k >= 0.8 && !diving.done) { diving.done = true; diving.cb && diving.cb(); } /* le flash part pendant l'approche */
       return;
     }
     camera.position.copy(v); camera.lookAt(look);
@@ -639,7 +639,7 @@ export function createScene(container, opts = {}) {
 
   return {
     canvas: el,
-    dive(cb) { if (diving) return; diving = { t0: clock.getElapsedTime(), dur: opts.diveDuration || 1.7, ctrl: new THREE.Vector3(-0.1, 1.62, -0.35), to: new THREE.Vector3(SCREEN.x, SCREEN.y, -1.36), cb }; },
+    dive(cb) { if (diving) return; diving = { t0: clock.getElapsedTime(), dur: opts.diveDuration || 1.7, ctrl: new THREE.Vector3(0.45, 2.25, -0.95) /* par-dessus la tête de Karim, jamais à travers */, to: new THREE.Vector3(SCREEN.x, SCREEN.y, -1.36), cb }; },
     setLabels(l) { labels = Object.assign(labels, l); for (const k in tags) tags[k].textContent = labels[k]; },
     setHour(h) { opts.hour = h; applyTime(currentHour()); },
     frames() { return frames; }, _act(n, hold) { action = null; startAction(n, clock.getElapsedTime()); if (hold !== undefined) action.hold = hold; }, _egg(i) { hits[i].userData.fn(); }, _proj(x, y, z) { const q = new THREE.Vector3(x, y, z).project(camera); return [(q.x * 0.5 + 0.5) * size.x, (-q.y * 0.5 + 0.5) * size.y]; }, _state() { return JSON.stringify({ a: action && action.name, t: clock.getElapsedTime().toFixed(2), t0: action && action.t0.toFixed(2), mug: mug.position.toArray().map(v => +v.toFixed(2)), hand: armRig[0].hand.position.toArray().map(v => +v.toFixed(2)), headX: head.rotation.x.toFixed(2) }); },
