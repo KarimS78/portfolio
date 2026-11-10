@@ -403,7 +403,7 @@ export function createScene(container, opts = {}) {
     add(new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.004, 6), M(PAL.ink, { roughness: 0.6 })), 0, 0, 0); }
   // étagères : cartouches-projets, boîtes de jeux, mini-borne, cristal
   box(0.95, 0.03, 0.2, walnut, 1.95, 1.5, -1.9, 0.006); box(0.95, 0.03, 0.2, walnut, 1.95, 1.92, -1.9, 0.006);
-  [['VIGIE', PAL.magenta], ['CLASSIFILE', PAL.amber], ['SIDEQUEST', PAL.blue], ['LUMEA', PAL.cream]].forEach((p, i) => { const c = cartridge(p[0], p[1], 1.62 + i * 0.15, 1.578, -1.88); c.rotation.x = -0.08; carts.push(c); });
+  [['VIGIE', PAL.magenta], ['CLASSIFILE', PAL.amber], ['SIDEQUEST', PAL.blue], ['LUMEA', PAL.cream], ['AVELYO', 0x5fd08a], ['LIFE OS', 0xff9e5c]].forEach((p, i) => { const c = cartridge(p[0], p[1], 1.58 + i * 0.148, 1.578, -1.88); c.rotation.x = -0.08; carts.push(c); });
   { const r = rng(21), cols = [0x34e0c4, 0xe0567e, 0xf2b441, 0x7fb2ff, 0x5b6cc9, 0xf3ecde, 0x7a2f47]; let x = 1.55;
     for (let i = 0; i < 11; i++) { const w = 0.018 + r() * 0.012; box(w, 0.19, 0.13, M(cols[i % cols.length], { roughness: 0.5 }), x + w / 2, 2.03, -1.9, 0.003); x += w + 0.002; }
     // mini-borne d'arcade
@@ -574,6 +574,11 @@ export function createScene(container, opts = {}) {
   hit(1.91, 0.775, -1.5, 0.22, () => { tvMode = (tvMode + 1) % 3; toast('CH ' + (tvMode + 1), 'tv'); });
   hit(0, 0, 0, 0.075, () => { startAction('drink', now); toast('COFFEE BREAK', 'mug'); }, mug);
   hit(2.17, 2.06, -1.9, 0.13, () => { tvMode = 1; toast('INSERT COIN', 'tv'); });
+  // mouvements déclenchés au clic : la souris, la fenêtre, et Karim lui-même (il alterne)
+  let meCycle = 0;
+  hit(0.78, 0.8, -1.3, 0.08, () => startAction('mouse', now));
+  hit(-1.35, 1.6, -2.05, 0.62, () => startAction('look', now));
+  hit(0.5, 1.18, -0.8, 0.2, () => { action = null; startAction(['stretch', 'drink', 'mouse', 'look'][meCycle++ % 4], now); });
   // étoile filante la nuit
   const star = new THREE.Mesh(new THREE.BoxGeometry(5, 0.12, 0.12), new THREE.MeshBasicMaterial({ color: new THREE.Color(4, 4, 5), fog: false })); star.visible = false; star.rotation.z = -0.35; scene.add(star);
   function animateEggs(t) {
@@ -637,7 +642,7 @@ export function createScene(container, opts = {}) {
     dive(cb) { if (diving) return; diving = { t0: clock.getElapsedTime(), dur: opts.diveDuration || 1.7, ctrl: new THREE.Vector3(-0.1, 1.62, -0.35), to: new THREE.Vector3(SCREEN.x, SCREEN.y, -1.36), cb }; },
     setLabels(l) { labels = Object.assign(labels, l); for (const k in tags) tags[k].textContent = labels[k]; },
     setHour(h) { opts.hour = h; applyTime(currentHour()); },
-    frames() { return frames; }, _act(n, hold) { action = null; startAction(n, clock.getElapsedTime()); if (hold !== undefined) action.hold = hold; }, _egg(i) { hits[i].userData.fn(); }, _state() { return JSON.stringify({ a: action && action.name, t: clock.getElapsedTime().toFixed(2), t0: action && action.t0.toFixed(2), mug: mug.position.toArray().map(v => +v.toFixed(2)), hand: armRig[0].hand.position.toArray().map(v => +v.toFixed(2)), headX: head.rotation.x.toFixed(2) }); },
+    frames() { return frames; }, _act(n, hold) { action = null; startAction(n, clock.getElapsedTime()); if (hold !== undefined) action.hold = hold; }, _egg(i) { hits[i].userData.fn(); }, _proj(x, y, z) { const q = new THREE.Vector3(x, y, z).project(camera); return [(q.x * 0.5 + 0.5) * size.x, (-q.y * 0.5 + 0.5) * size.y]; }, _state() { return JSON.stringify({ a: action && action.name, t: clock.getElapsedTime().toFixed(2), t0: action && action.t0.toFixed(2), mug: mug.position.toArray().map(v => +v.toFixed(2)), hand: armRig[0].hand.position.toArray().map(v => +v.toFixed(2)), headX: head.rotation.x.toFixed(2) }); },
     dispose() { alive = false; cancelAnimationFrame(raf); ro.disconnect(); window.removeEventListener('keydown', onKey); clearTimeout(toastTimer); toastEl.remove(); window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); window.removeEventListener('pointercancel', onUp);
       container.removeEventListener('click', onClickCapture, true); scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach((m) => { for (const k in m) if (m[k] && m[k].isTexture) m[k].dispose(); m.dispose(); }); } });
       composer.dispose(); target.dispose(); pmrem.dispose(); renderer.dispose(); for (const k in tags) tags[k].remove(); style.remove(); el.remove(); }

@@ -3,7 +3,7 @@
    les projets (cartes .proj clonées), le parcours et le contact. */
 (function () {
   'use strict';
-  var T = 16, MW = 30, MH = 20, SCALE = 2;
+  var T = 16, MW = 30, MH = 26, SCALE = 2;
   var PAL = { teal: '#34E0C4', amber: '#F2B441', magenta: '#E0567E', cream: '#F3ECDE', ink: '#12101F', grey: '#A9B2C8' };
 
   /* ---------- textes ---------- */
@@ -18,6 +18,10 @@
       npc: { fr: 'TAVERNIER', en: 'INNKEEPER' }, line: { fr: 'Tu ne sais pas à quoi jouer ce soir ? SIDEQUEST choisit pour toi, et te dit pourquoi.', en: 'Not sure what to play tonight? SIDEQUEST picks for you, and tells you why.' } },
     { id: 'lumea', x: 17, y: 12, w: 5, h: 4, roof: '#5b6cc9', wall: '#f3ecde', proj: 'Lumea', label: { fr: 'ATELIER', en: 'WORKSHOP' }, sub: 'LUMEA',
       npc: { fr: 'ARTISANE', en: 'CRAFTSWOMAN' }, line: { fr: 'Un site sur mesure, du design au nom de domaine ? C\'est l\'atelier LUMEA.', en: 'A bespoke site, from design to domain? That is the LUMEA workshop.' } },
+    { id: 'avelyo', x: 5, y: 19, w: 6, h: 4, roof: '#3f9a5f', wall: '#f3ecde', proj: 'Avelyo', label: { fr: 'COMPTOIR', en: 'COUNTER' }, sub: 'AVELYO',
+      npc: { fr: 'COMPTABLE', en: 'BOOKKEEPER' }, line: { fr: 'Devis, factures, et la réforme de la facturation électronique déjà prête. Entre voir AVELYO.', en: 'Quotes, invoices, and France\'s e-invoicing reform already handled. Come and see AVELYO.' } },
+    { id: 'lifeos', x: 18, y: 19, w: 5, h: 4, roof: '#d07a3a', wall: '#f3ecde', proj: 'Life OS', label: { fr: 'MAISON', en: 'HOME' }, sub: 'LIFE OS',
+      npc: { fr: 'HABITANT', en: 'RESIDENT' }, line: { fr: 'Ici, on planifie sans pression : ni score, ni série, ni culpabilité. Entre voir LIFE OS.', en: 'In here we plan without pressure: no scores, no streaks, no guilt. Come and see LIFE OS.' } },
     { id: 'about', x: 23, y: 11, w: 6, h: 5, roof: '#232043', wall: '#a9b2c8', guild: true, go: 'about', label: { fr: 'GUILDE APPSEC', en: 'APPSEC GUILD' }, sub: { fr: 'PARCOURS', en: 'BACKGROUND' },
       npc: { fr: 'MAÎTRE DE GUILDE', en: 'GUILD MASTER' }, line: { fr: 'Bienvenue à la guilde AppSec. La fiche de perso et le parcours de Karim sont affichés à l\'intérieur.', en: 'Welcome to the AppSec guild. Karim\'s character sheet and background are posted inside.' } },
     { id: 'contact', x: 9, y: 12, w: 4, h: 4, roof: '#f2b441', wall: '#f3ecde', go: 'contact', label: { fr: 'POSTE', en: 'POST' }, sub: 'CONTACT',
@@ -26,7 +30,7 @@
   var TXT = {
     enter: { fr: '▶ ENTRER', en: '▶ ENTER' }, later: { fr: 'PLUS TARD', en: 'LATER' }, ok: { fr: 'OK', en: 'OK' },
     cat: { n: { fr: 'CHAT', en: 'CAT' }, l: { fr: 'Miaou. (Il a l\'air d\'approuver ta revue de code.)', en: 'Meow. (It seems to approve of your code review.)' } },
-    sign: { n: { fr: 'PANNEAU', en: 'SIGNPOST' }, l: { fr: 'KARIM QUEST — Nord : labo, archives, tour. Sud : taverne, poste, atelier, guilde. Trois bugs rôdent dans le village.', en: 'KARIM QUEST — North: lab, archives, tower. South: tavern, post, workshop, guild. Three bugs roam the village.' } },
+    sign: { n: { fr: 'PANNEAU', en: 'SIGNPOST' }, l: { fr: 'KARIM QUEST — Nord : labo, archives, tour. Sud : taverne, poste, atelier, guilde. Tout au sud : comptoir et maison. Trois bugs rôdent dans le village.', en: 'KARIM QUEST — North: lab, archives, tower. South: tavern, post, workshop, guild. Far south: counter and home. Three bugs roam the village.' } },
     chest: { n: { fr: 'COFFRE', en: 'CHEST' }, l: { fr: 'Tu trouves la planque du dev : une clé « .env » qui n\'aurait jamais dû être commitée. Tu la ranges dans un coffre-fort de secrets.', en: 'You found the dev\'s stash: a ".env" key that should never have been committed. You move it into a secrets vault.' }, l2: { fr: 'Le coffre est vide. Les secrets sont au coffre-fort.', en: 'The chest is empty. The secrets are in the vault.' } },
     bugs: [
       { n: 'SQLi', fr: 'SQLi écrasée — requêtes paramétrées.', en: 'SQLi squashed — parameterized queries.' },
@@ -46,7 +50,7 @@
   function idx(x, y) { return y * MW + x; }
   function inMap(x, y) { return x >= 0 && y >= 0 && x < MW && y < MH; }
   function setPath(x0, y0, x1, y1) { for (var yy = y0; yy <= y1; yy++) for (var xx = x0; xx <= x1; xx++) path[idx(xx, yy)] = true; }
-  setPath(1, 9, 28, 10); setPath(4, 7, 4, 8); setPath(11, 7, 11, 8); setPath(19, 7, 20, 8); setPath(14, 11, 15, 17); setPath(4, 17, 27, 17);
+  setPath(1, 9, 28, 10); setPath(4, 7, 4, 8); setPath(11, 7, 11, 8); setPath(19, 7, 20, 8); setPath(14, 11, 15, 24); setPath(4, 17, 27, 17); setPath(4, 24, 27, 24); setPath(7, 23, 7, 23); setPath(20, 23, 20, 23);
   setPath(5, 16, 5, 16); setPath(10, 16, 10, 16); setPath(19, 16, 19, 16); setPath(25, 16, 25, 16);
   for (y = 1; y <= 5; y++) for (x = 24; x <= 28; x++) { water[idx(x, y)] = true; solid[idx(x, y)] = true; }
   B.forEach(function (b) { for (var yy = b.y; yy < b.y + b.h; yy++) for (var xx = b.x; xx < b.x + b.w; xx++) solid[idx(xx, yy)] = true;
@@ -54,9 +58,9 @@
   function tree(x, y) { if (inMap(x, y) && !solid[idx(x, y)] && !path[idx(x, y)]) { solid[idx(x, y)] = true; trees.push({ x: x, y: y }); } }
   for (x = 0; x < MW; x++) { tree(x, 0); tree(x, MH - 1); }
   for (y = 0; y < MH; y++) { tree(0, y); tree(MW - 1, y); }
-  [[1, 12], [2, 12], [2, 13], [2, 14], [7, 2], [7, 5], [15, 2], [15, 4], [16, 6], [23, 7], [27, 7], [8, 13], [13, 13], [16, 12], [22, 13], [1, 1], [8, 1], [28, 8], [1, 8], [6, 11], [21, 11], [12, 18], [18, 18], [24, 18]].forEach(function (p) { tree(p[0], p[1]); });
+  [[1, 12], [2, 12], [2, 13], [2, 14], [7, 2], [7, 5], [15, 2], [15, 4], [16, 6], [23, 7], [27, 7], [8, 13], [13, 13], [16, 12], [22, 13], [1, 1], [8, 1], [28, 8], [1, 8], [6, 11], [21, 11], [12, 19], [3, 20], [12, 21], [24, 20], [26, 22], [16, 21]].forEach(function (p) { tree(p[0], p[1]); });
   var seed = 12345; function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
-  for (i = 0; i < 46; i++) { x = 1 + Math.floor(rnd() * 28); y = 1 + Math.floor(rnd() * 18); if (!solid[idx(x, y)] && !path[idx(x, y)]) flowers.push({ x: x, y: y, c: rnd() }); }
+  for (i = 0; i < 60; i++) { x = 1 + Math.floor(rnd() * 28); y = 1 + Math.floor(rnd() * (MH - 2)); if (!solid[idx(x, y)] && !path[idx(x, y)]) flowers.push({ x: x, y: y, c: rnd() }); }
 
   var things = [
     { kind: 'cat', x: 8, y: 11 }, { kind: 'sign', x: 13, y: 11 }, { kind: 'chest', x: 1, y: 13, open: false }
@@ -94,7 +98,7 @@
     if (b.go) { if (window.__arcadeShow) window.__arcadeShow(b.go); return; }
     var src = null; document.querySelectorAll('#screen-projects .proj').forEach(function (a) { var h = a.querySelector('h3'); if (h && h.textContent.trim() === b.proj) src = a; });
     if (!src) { if (window.__arcadeShow) window.__arcadeShow('projects'); return; }
-    var body = modal.querySelector('.q-modal-body'); body.innerHTML = ''; var c = src.cloneNode(true); c.classList.add('boss'); body.appendChild(c);
+    var body = modal.querySelector('.q-modal-body'); body.innerHTML = ''; var c = src.cloneNode(true), old = c.querySelector('.q-banner'); if (old) old.remove(); body.appendChild(c); if (THEME_OF[b.proj]) addBanner(c, THEME_OF[b.proj]);
     modal.classList.add('on'); relang(); modal.querySelector('.q-close').focus({ preventScroll: true });
   }
   function talkBuilding(b) { openDialog(b.npc, b.line, [{ label: TXT.enter, fn: function () { enterBuilding(b); } }, { label: TXT.later }]); }
@@ -156,6 +160,122 @@
     });
   }
 
+  /* ---------- bandeaux thématiques : chaque page rappelle ce qu'est le projet ---------- */
+  var THEME_OF = { Aquarys: 'aquarys', Vigie: 'vigie', Classifile: 'classifile', SideQuest: 'sidequest', Lumea: 'lumea', Avelyo: 'avelyo', 'Life OS': 'lifeos' };
+  var ARIA = { aquarys: 'Water, sample bottles and test tubes', vigie: 'Radar sweep and a map of zones with people checked in', classifile: 'Documents sorted into folders on a conveyor', sidequest: 'A shelf of games with a cursor picking one', lumea: 'A light bulb and a web page being assembled', avelyo: 'An invoice being filled in, then sent to an e-invoicing platform', lifeos: 'A day going by, with a few tasks ticked off calmly', about: 'Guild hall with a shield and torches', contact: 'Envelopes flying to a mailbox' };
+  var banners = [], BW = 240, BH = 64;
+  function addBanner(host, theme, before) {
+    var c = document.createElement('canvas'); c.className = 'q-banner'; c.width = BW; c.height = BH; c.setAttribute('role', 'img'); c.setAttribute('aria-label', ARIA[theme]);
+    host.insertBefore(c, before || host.firstChild); banners.push({ c: c, g: c.getContext('2d'), theme: theme }); return c;
+  }
+  function P(g, c, x, y, w, h) { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), w, h); }
+  var THEMES = {
+    aquarys: function (g, t) {
+      P(g, '#123a63', 0, 0, BW, BH); P(g, '#0f4f86', 0, 20, BW, BH); P(g, '#0c3f70', 0, 38, BW, BH); P(g, '#0a3059', 0, 52, BW, BH);
+      for (var x = 0; x < BW; x += 2) { var y = 19 + Math.round(Math.sin(x * 0.08 + t * 2) * 2 + Math.sin(x * 0.03 - t) * 1.5); P(g, '#0f4f86', x, y, 2, 6); P(g, '#7fd4ff', x, y, 2, 1); }
+      for (var k = 0; k < 12; k++) { P(g, '#2b8fd0', (k * 53 + t * 14) % (BW + 20) - 10, 30 + (k % 4) * 8, 9, 1); }
+      for (k = 0; k < 11; k++) { var by = BH - ((t * 12 + k * 17) % 44); P(g, '#bfeaff', (k * 37 + 9) % BW + Math.sin(t * 2 + k) * 2, by, 2, 2); }
+      var fy = 9 + Math.sin(t * 2) * 2; P(g, '#12101f', 37, fy - 3, 6, 3); P(g, '#f3ecde', 34, fy, 12, 15); P(g, '#34e0c4', 34, fy + 5, 12, 5); P(g, '#7fd4ff', 35, fy + 11, 10, 3);
+      P(g, '#a9b2c8', 148, 0, 3, 6); P(g, '#7fd4ff', 149, 6 + (t * 26) % 14, 1, 3);
+      var cols = ['#34e0c4', '#f2b441', '#e0567e', '#7fb2ff', '#34e0c4'];
+      P(g, '#12101f', 160, 54, 74, 4);
+      for (k = 0; k < 5; k++) { var lv = 6 + Math.round((Math.sin(t * 0.9 + k * 1.3) * 0.5 + 0.5) * 13), tx = 164 + k * 14; P(g, '#f3ecde', tx, 28, 8, 26); P(g, '#12304f', tx + 1, 29, 6, 24); P(g, cols[k], tx + 1, 53 - lv, 6, lv); }
+    },
+    vigie: function (g, t) {
+      P(g, '#12101f', 0, 0, BW, BH); for (var x = 0; x < BW; x += 12) P(g, '#1b1830', x, 0, 1, BH); for (var y = 0; y < BH; y += 12) P(g, '#1b1830', 0, y, BW, 1);
+      var cx = 38, cy = 32, a = t * 1.6, k;
+      for (k = 0; k < 64; k++) { var an = k / 64 * 6.283; P(g, '#1f9c88', cx + Math.cos(an) * 26, cy + Math.sin(an) * 26, 1, 1); if (k % 2) P(g, '#15554b', cx + Math.cos(an) * 14, cy + Math.sin(an) * 14, 1, 1); }
+      P(g, '#15554b', cx - 26, cy, 53, 1); P(g, '#15554b', cx, cy - 26, 1, 53);
+      for (var w = 0; w < 10; w++) for (k = 2; k < 26; k += 2) P(g, 'rgba(52,224,196,' + (0.5 - w * 0.05).toFixed(2) + ')', cx + Math.cos(a - w * 0.07) * k, cy + Math.sin(a - w * 0.07) * k, 2, 2);
+      [[14, 0.6], [20, 2.2], [9, 3.9], [22, 5.1]].forEach(function (b) { var d = ((a - b[1]) % 6.283 + 6.283) % 6.283; if (d < 2.4) P(g, d < 0.5 ? '#f3ecde' : '#34e0c4', cx + Math.cos(b[1]) * b[0] - 1, cy + Math.sin(b[1]) * b[0] - 1, 3, 3); });
+      var n = [2, 0, 3, 1, 0, 2, 1, 0];
+      for (k = 0; k < 8; k++) { var zx = 84 + (k % 4) * 38, zy = 6 + Math.floor(k / 4) * 28, closed = k === 5;
+        P(g, closed ? '#e0567e' : '#34315a', zx, zy, 34, 24); P(g, closed ? '#3d1626' : '#1b1830', zx + 1, zy + 1, 32, 22);
+        if (closed) { for (var h = 0; h < 30; h += 6) P(g, '#e0567e', zx + 2 + h, zy + 10, 3, 3); if (Math.floor(t * 2) % 2) P(g, '#f3ecde', zx + 14, zy + 3, 5, 5); }
+        for (var q = 0; q < n[k]; q++) { var pulse = Math.floor(t * 2 + q + k) % 4 === 0; P(g, pulse ? '#f3ecde' : '#34e0c4', zx + 6 + q * 9, zy + 13, 4, 5); P(g, pulse ? '#f3ecde' : '#34e0c4', zx + 7 + q * 9, zy + 9, 2, 3); } }
+    },
+    classifile: function (g, t) {
+      P(g, '#1b1830', 0, 0, BW, BH); P(g, '#232043', 0, 40, BW, 4); for (var x = 0; x < BW; x += 10) P(g, '#34315a', (x + t * 20) % BW, 41, 4, 2);
+      var k; for (k = 0; k < 5; k++) { P(g, k % 2 ? '#d9d2c2' : '#f3ecde', 6 + k * 3, 24 + (k * 5) % 9, 12, 14); P(g, '#a9b2c8', 8 + k * 3, 28 + (k * 5) % 9, 7, 1); }
+      var cols = ['#f2b441', '#34e0c4', '#e0567e', '#7fb2ff'], fx = [96, 132, 168, 204];
+      for (k = 0; k < 6; k++) { var p = (t * 0.3 + k / 6) % 1, f = k % 4, dx, dy;
+        if (p < 0.75) { dx = 24 + (fx[f] + 5 - 24) * (p / 0.75); dy = 26; } else { dx = fx[f] + 5; dy = 26 + (p - 0.75) / 0.25 * 20; }
+        if (dy < 44) { P(g, '#f3ecde', dx, dy, 10, 13); P(g, cols[f], dx, dy, 10, 3); P(g, '#a9b2c8', dx + 2, dy + 6, 6, 1); P(g, '#a9b2c8', dx + 2, dy + 9, 4, 1); } }
+      for (k = 0; k < 4; k++) { var flash = ((t * 0.3 + k / 6) % 1 > 0.92) || ((t * 0.3 + (k + 4) / 6) % 1 > 0.92 && k < 2);
+        P(g, cols[k], fx[k], 44, 9, 3); P(g, cols[k], fx[k], 46, 22, 15); P(g, 'rgba(18,16,31,.35)', fx[k], 56, 22, 5); if (flash) P(g, '#f3ecde', fx[k] + 8, 50, 6, 6); }
+    },
+    sidequest: function (g, t) {
+      P(g, '#1a1436', 0, 0, BW, BH); P(g, '#2a2050', 0, 29, BW, 3); P(g, '#2a2050', 0, 59, BW, 3);
+      var cols = ['#34e0c4', '#e0567e', '#f2b441', '#7fb2ff', '#a78bff', '#f3ecde'], u = t % 4, pick = (Math.floor(t / 4) * 5 + 3) % 18, idx = u < 2.6 ? Math.floor(u * 7) % 18 : pick, k;
+      for (k = 0; k < 18; k++) { var x = 14 + (k % 9) * 24, y = 5 + Math.floor(k / 9) * 30, c = cols[(k * 7 + Math.floor(k / 9) * 3) % 6];
+        P(g, c, x, y, 18, 24); P(g, 'rgba(18,16,31,.35)', x, y + 16, 18, 8); P(g, 'rgba(255,255,255,.3)', x + 2, y + 2, 6, 6);
+        if (k === idx) { var on = u < 2.6 || Math.floor(t * 6) % 2; if (on) { P(g, '#f2b441', x - 2, y - 2, 22, 2); P(g, '#f2b441', x - 2, y + 24, 22, 2); P(g, '#f2b441', x - 2, y - 2, 2, 28); P(g, '#f2b441', x + 18, y - 2, 2, 28); }
+          if (u >= 2.6) { P(g, '#12101f', x + 5, y + 7, 8, 10); P(g, '#f3ecde', x + 7, y + 8, 2, 8); P(g, '#f3ecde', x + 9, y + 10, 2, 4); P(g, '#f3ecde', x + 11, y + 11, 1, 2); } } }
+    },
+    lumea: function (g, t) {
+      P(g, '#171226', 0, 0, BW, BH); var k, r = 7 + Math.sin(t * 3) * 2, cx = 38, cy = 24;
+      for (k = 0; k < 8; k++) { var a = k * 0.785; P(g, '#f2b441', cx + Math.cos(a) * (10 + r) - 1, cy + Math.sin(a) * (10 + r) - 1, 3, 3); P(g, '#8a5a12', cx + Math.cos(a) * (8 + r * 0.5) - 1, cy + Math.sin(a) * (8 + r * 0.5) - 1, 2, 2); }
+      P(g, '#ffd98a', cx - 5, cy - 7, 10, 12); P(g, '#ffd98a', cx - 7, cy - 4, 14, 6); P(g, '#fff4d6', cx - 3, cy - 5, 4, 4); P(g, '#a9b2c8', cx - 3, cy + 5, 6, 5); P(g, '#12101f', cx - 3, cy + 7, 6, 1);
+      P(g, '#f3ecde', 92, 5, 136, 54); P(g, '#1b1830', 93, 6, 134, 52); P(g, '#34315a', 93, 6, 134, 7); P(g, '#e0567e', 96, 8, 3, 3); P(g, '#f2b441', 101, 8, 3, 3); P(g, '#34e0c4', 106, 8, 3, 3);
+      var u = (t % 5) / 5;
+      if (u > 0.08) { P(g, '#ffd98a', 98, 17, 22, 4); P(g, '#a9b2c8', 190, 17, 9, 3); P(g, '#a9b2c8', 202, 17, 9, 3); P(g, '#a9b2c8', 214, 17, 9, 3); }
+      if (u > 0.25) { P(g, '#f3ecde', 98, 26, 62, 5); P(g, '#a9b2c8', 98, 33, 46, 2); }
+      if (u > 0.42) P(g, '#232043', 170, 24, 52, 16);
+      if (u > 0.55) P(g, '#34315a', 98, 44, 38, 11); if (u > 0.65) P(g, '#34315a', 141, 44, 38, 11); if (u > 0.75) P(g, '#34315a', 184, 44, 38, 11);
+      if (u > 0.86) { P(g, '#34e0c4', 98, 37, 26, 5); if (Math.floor(t * 4) % 2) P(g, '#fff4d6', 174, 28, 44, 8); }
+      for (k = 0; k < 6; k++) P(g, '#8a5a12', 52 + k * 7, 24 + Math.sin(t * 2 + k) * 1, 3, 1);
+    },
+    avelyo: function (g, t) {
+      P(g, '#14251d', 0, 0, BW, BH); var u = (t % 6) / 6, k;
+      P(g, '#f3ecde', 16, 5, 62, 54); P(g, '#3f9a5f', 16, 5, 62, 7); P(g, '#12101f', 20, 16, 22, 2);
+      for (k = 0; k < 4; k++) if (u > 0.08 + k * 0.1) { P(g, '#a9b2c8', 20, 22 + k * 6, 30, 2); P(g, '#12101f', 62, 22 + k * 6, 12, 2); }
+      if (u > 0.5) { P(g, '#12101f', 20, 48, 54, 1); P(g, '#3f9a5f', 52, 51, 22, 5); }
+      if (u > 0.6) { P(g, '#34e0c4', 24, 49, 10, 8); P(g, '#12101f', 26, 53, 2, 2); P(g, '#12101f', 28, 55, 2, 1); P(g, '#12101f', 30, 51, 2, 4); }
+      for (k = 0; k < 9; k++) P(g, '#2a5a40', 88 + k * 9, 32, 5, 1);
+      if (u > 0.62) { var x = 84 + Math.min(1, (u - 0.62) / 0.3) * 84; P(g, '#f3ecde', x, 27, 12, 10); P(g, '#3f9a5f', x, 27, 12, 3); P(g, '#a9b2c8', x + 2, 32, 8, 1); }
+      P(g, '#5fd08a', 178, 12, 48, 40); P(g, '#14251d', 180, 14, 44, 36); for (k = 0; k < 3; k++) { P(g, '#2a5a40', 184, 18 + k * 11, 36, 8); P(g, (u > 0.92 || u < 0.05) && k === 1 ? '#f3ecde' : '#5fd08a', 186, 20 + k * 11, 4, 4); P(g, '#5fd08a', 194, 21 + k * 11, 18, 2); }
+      for (k = 0; k < 3; k++) { P(g, '#f2b441', 100 + k * 14, 50 - k * 3, 10, 3 + k * 3); P(g, '#b9801f', 100 + k * 14, 52, 10, 1); }
+    },
+    lifeos: function (g, t) {
+      var u = (t % 10) / 10, k, day = Math.sin(u * Math.PI);
+      P(g, u < 0.12 || u > 0.88 ? '#3a2a55' : '#2f6fb0', 0, 0, BW, BH); P(g, u < 0.12 || u > 0.88 ? '#7a4a6a' : '#6fa8dc', 0, 22, BW, 14); P(g, '#ff9e5c', 0, 34, BW, 2);
+      var sx = 14 + u * 212, sy = 30 - day * 22; P(g, '#ffd98a', sx - 5, sy - 5, 10, 10); P(g, '#ffd98a', sx - 7, sy - 2, 14, 4); P(g, '#fff4d6', sx - 2, sy - 3, 4, 4);
+      for (k = 0; k < 3; k++) P(g, 'rgba(243,236,222,.75)', (k * 90 + t * 3) % (BW + 30) - 30, 8 + k * 5, 22, 4);
+      P(g, '#1b1830', 0, 36, BW, 28); P(g, '#34315a', 12, 48, 216, 2);
+      for (k = 0; k < 5; k++) { var x = 20 + k * 42, done = u > 0.12 + k * 0.16; P(g, done ? '#2a3a35' : '#232043', x, 40, 34, 18); P(g, done ? '#34e0c4' : '#a9b2c8', x + 3, 43, 8, 8); P(g, '#1b1830', x + 4, 44, 6, 6);
+        if (done) { P(g, '#34e0c4', x + 5, 47, 1, 2); P(g, '#34e0c4', x + 6, 48, 1, 2); P(g, '#34e0c4', x + 7, 46, 1, 3); P(g, '#34e0c4', x + 8, 45, 1, 2); }
+        P(g, done ? '#5a6a66' : '#f3ecde', x + 14, 45, 16, 2); P(g, done ? '#5a6a66' : '#a9b2c8', x + 14, 50, 10, 2); }
+      P(g, '#ff9e5c', 12 + u * 216, 38, 2, 22);
+    },
+    about: function (g, t) {
+      P(g, '#232043', 0, 0, BW, BH); var x, y, k;
+      for (y = 0; y < BH; y += 8) for (x = (y / 8) % 2 ? -8 : 0; x < BW; x += 16) { P(g, '#1b1830', x, y, 16, 1); P(g, '#1b1830', x, y, 1, 8); }
+      [22, 214].forEach(function (tx, i) { P(g, '#5a3d2e', tx, 26, 4, 22); var f = Math.floor(t * 8 + i) % 3; P(g, '#f2b441', tx - 2, 16 + f, 8, 10 - f); P(g, '#fff4d6', tx, 20 + f, 4, 5 - f); P(g, 'rgba(242,180,65,.12)', tx - 14, 6, 32, 34); });
+      [[60, '#e0567e'], [166, '#f2b441']].forEach(function (b) { P(g, b[1], b[0], 4, 14, 34); P(g, b[1], b[0], 38, 5, 5); P(g, b[1], b[0] + 9, 38, 5, 5); P(g, '#12101f', b[0] + 4, 12, 6, 6); });
+      P(g, '#34e0c4', 104, 8, 32, 30); P(g, '#34e0c4', 108, 38, 24, 6); P(g, '#34e0c4', 114, 44, 12, 5); P(g, '#12101f', 108, 12, 24, 22); P(g, '#12101f', 112, 34, 16, 6);
+      P(g, '#34e0c4', 115, 17, 10, 8); P(g, '#12101f', 118, 20, 4, 4); P(g, '#34e0c4', 113, 24, 14, 11); P(g, '#12101f', 119, 27, 2, 5);
+      var gl = Math.floor(t * 2) % 2; P(g, gl ? '#f3ecde' : '#34e0c4', 104, 8, 32, 1);
+      P(g, '#12101f', 0, 56, BW, 8); for (k = 0; k < 5; k++) P(g, k % 2 ? '#f2b441' : '#34e0c4', 84 + k * 16, 58, 8, 4);
+    },
+    contact: function (g, t) {
+      P(g, '#15233a', 0, 0, BW, BH); var k; for (k = 0; k < 16; k++) if ((Math.floor(t * 2) + k) % 5) P(g, '#f3ecde', (k * 47) % BW, (k * 23) % 34, 1, 1);
+      P(g, '#1f6a45', 0, 54, BW, 10); P(g, '#2a8a58', 0, 54, BW, 2);
+      P(g, '#5a3d2e', 206, 34, 4, 22); P(g, '#f2b441', 194, 20, 28, 16); P(g, '#b9801f', 194, 32, 28, 4); P(g, '#12101f', 198, 25, 14, 2);
+      var up = Math.sin(t * 1.5) > 0; P(g, '#e0567e', 222, up ? 14 : 24, 2, 10); P(g, '#e0567e', 224, up ? 14 : 30, 6, 4);
+      for (k = 0; k < 3; k++) { var x = ((t * 34 + k * 74) % 216) - 14, y = 22 + Math.sin(x * 0.05 + k * 2) * 10;
+        for (var d = 1; d < 5; d++) P(g, '#7fb2ff', x - d * 7, 22 + Math.sin((x - d * 7) * 0.05 + k * 2) * 10 + 4, 2, 1);
+        P(g, '#f3ecde', x, y, 13, 9); P(g, '#a9b2c8', x, y, 13, 1); P(g, '#a9b2c8', x + 1, y + 1, 2, 1); P(g, '#a9b2c8', x + 10, y + 1, 2, 1); P(g, '#a9b2c8', x + 3, y + 2, 2, 1); P(g, '#a9b2c8', x + 8, y + 2, 2, 1); P(g, '#a9b2c8', x + 5, y + 3, 3, 1); P(g, '#e0567e', x + 5, y + 5, 3, 2); }
+    }
+  };
+  function drawBanners(t) {
+    for (var k = banners.length - 1; k >= 0; k--) { var b = banners[k]; if (!b.c.isConnected) { banners.splice(k, 1); continue; } if (b.c.offsetParent !== null) THEMES[b.theme](b.g, t); }
+  }
+  function decorate() {
+    document.querySelectorAll('#screen-projects .proj').forEach(function (a) { var h = a.querySelector('h3'), th = h && THEME_OF[h.textContent.trim()]; if (th) { a.classList.add('th-' + th); addBanner(a, th); } });
+    var ab = document.querySelector('#screen-about .rpg'); if (ab) addBanner(ab.parentNode, 'about', ab);
+    var co = document.querySelector('#screen-contact .cgrid'); if (co) addBanner(co.parentNode, 'contact', co);
+  }
+
   /* ---------- dessin ---------- */
   function R(c, x, y, w, h) { ctx.fillStyle = c; ctx.fillRect(Math.round(x), Math.round(y), w, h); }
   function buildBg() {
@@ -199,6 +319,15 @@
     if (b.guild) { R(PAL.teal, x + w / 2 - 6, y + 4, 12, 10); R('#232043', x + w / 2 - 4, y + 6, 8, 6); R(PAL.teal, x + w / 2 - 1, y + 7, 2, 4); }
     var dxp = b.dx * T + 2; R('#12101f', dxp, y + h - 15, 12, 15); R('#5a3d2e', dxp + 1, y + h - 14, 10, 14); R(PAL.amber, dxp + 8, y + h - 7, 2, 2);
     var wy = y + rh + 6; for (var wx = x + 5; wx + 9 <= x + w - 4; wx += 14) { if (wx + 9 > dxp - 2 && wx < dxp + 14 && wy + 9 > y + h - 16) continue; R('#12101f', wx, wy, 9, 9); R(lit ? '#ffd58a' : '#7fb2ff', wx + 1, wy + 1, 7, 7); R('rgba(18,16,31,.55)', wx + 4, wy + 1, 1, 7); }
+    if (!b.tower && !b.guild) { var ix = Math.round(x + w / 2 - 6), iy = y + Math.floor(rh / 2) - 6; R('#12101f', ix, iy, 12, 12);
+      if (b.id === 'aquarys') { R('#7fd4ff', ix + 5, iy + 2, 2, 2); R('#4fb6e8', ix + 4, iy + 4, 4, 2); R('#4fb6e8', ix + 3, iy + 6, 6, 3); R('#7fd4ff', ix + 4, iy + 6, 1, 2); }
+      else if (b.id === 'classifile') { R('#f2b441', ix + 2, iy + 3, 4, 2); R('#f2b441', ix + 2, iy + 4, 8, 6); R('#f3ecde', ix + 4, iy + 2, 5, 3); }
+      else if (b.id === 'sidequest') { R('#f3ecde', ix + 2, iy + 2, 8, 8); R('#12101f', ix + 3, iy + 3, 2, 2); R('#12101f', ix + 7, iy + 7, 2, 2); R('#12101f', ix + 5, iy + 5, 2, 2); }
+      else if (b.id === 'lumea') { R('#ffd98a', ix + 4, iy + 2, 4, 5); R('#ffd98a', ix + 3, iy + 3, 6, 3); R('#a9b2c8', ix + 5, iy + 7, 2, 3); }
+      else if (b.id === 'avelyo') { R('#f3ecde', ix + 3, iy + 2, 6, 8); R('#3f9a5f', ix + 3, iy + 2, 6, 2); R('#12101f', ix + 4, iy + 5, 4, 1); R('#12101f', ix + 4, iy + 7, 3, 1); }
+      else if (b.id === 'lifeos') { R('#ffd98a', ix + 4, iy + 4, 4, 4); R('#ffd98a', ix + 5, iy + 2, 2, 8); R('#ffd98a', ix + 2, iy + 5, 8, 2); }
+      else if (b.id === 'contact') { R('#f3ecde', ix + 2, iy + 3, 8, 6); R('#12101f', ix + 3, iy + 4, 1, 1); R('#12101f', ix + 8, iy + 4, 1, 1); R('#12101f', ix + 4, iy + 5, 1, 1); R('#12101f', ix + 7, iy + 5, 1, 1); R('#12101f', ix + 5, iy + 6, 2, 1); } }
+    if (b.tower) { var ey = y + rh + 22; R('#12101f', x + w / 2 - 6, ey, 12, 7); R('#f3ecde', x + w / 2 - 4, ey + 2, 8, 3); R(PAL.magenta, x + w / 2 - 1 + Math.round(Math.sin(time * 1.5) * 2), ey + 2, 2, 3); }
     if (b.done) { R(PAL.teal, x + w - 9, y + rh + 1, 7, 7); R('#12101f', x + w - 7, y + rh + 4, 1, 2); R('#12101f', x + w - 6, y + rh + 5, 1, 2); R('#12101f', x + w - 5, y + rh + 3, 1, 3); R('#12101f', x + w - 4, y + rh + 2, 1, 2); }
   }
   function drawLabel(b) {
@@ -241,20 +370,22 @@
   function frame(t) {
     raf = requestAnimationFrame(frame);
     var active = root.classList.contains('active') && document.body.classList.contains('entered') && !document.hidden;
-    var dt = Math.min(0.05, (t - lastT) / 1000 || 0); lastT = t; if (!active) return;
+    var dt = Math.min(0.05, (t - lastT) / 1000 || 0); lastT = t;
+    if (document.body.classList.contains('entered') && !document.hidden) drawBanners(t / 1000);
+    if (!active) return;
     if (root.clientWidth !== lastCW) resize();
     update(dt); draw();
   }
   function resize() {
     lastCW = root.clientWidth; var cw = Math.min(lastCW, 960); if (cw < 100) return;
-    vw = Math.min(MW * T, Math.floor(cw / SCALE)); vh = Math.min(MH * T, Math.max(200, Math.floor(Math.min(window.innerHeight * 0.62, 640) / SCALE)));
+    vw = Math.min(MW * T, Math.floor(cw / SCALE)); vh = Math.min(MH * T, Math.max(200, Math.floor(Math.min(window.innerHeight * 0.62, 832) / SCALE)));
     canvas.width = vw; canvas.height = vh; canvas.style.width = (vw * SCALE) + 'px'; canvas.style.height = (vh * SCALE) + 'px';
   }
 
   function init() {
     root = document.getElementById('screen-quest'); if (!root) return;
     canvas = root.querySelector('canvas'); ctx = canvas.getContext('2d'); dlg = root.querySelector('.q-dialog'); toastEl = root.querySelector('.q-toast'); hud = root.querySelector('.q-count'); modal = document.getElementById('q-modal');
-    buildBg(); resize(); updateHud(); window.addEventListener('resize', resize);
+    buildBg(); decorate(); resize(); updateHud(); window.addEventListener('resize', resize);
     var KM = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', z: 'up', s: 'down', a: 'left', q: 'left', d: 'right' };
     document.addEventListener('keydown', function (ev) {
       if (!root.classList.contains('active') || !document.body.classList.contains('entered')) return;

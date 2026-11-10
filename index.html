@@ -455,6 +455,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>KARIM.EXE — Cyber Security Analyst · Application Security</title>
+<script>
+/* Décide tout de suite (avant les polices et le premier affichage) si l'intro sera en 3D, pour ne jamais montrer l'ancienne scène en attendant. */
+(function(){ var ok=false; try{ ok=!window.matchMedia('(prefers-reduced-motion: reduce)').matches && !!document.createElement('canvas').getContext('webgl2'); }catch(e){}
+  window.__want3d=ok; if(ok) document.documentElement.classList.add('pre3d'); })();
+<\/script>
 <meta name="description" content="Cyber Security Analyst, en sécurité applicative. Du terrain au logiciel en production. Next.js, PostgreSQL, TypeScript. En remote." />
 
 <script type="application/ld+json">
@@ -639,14 +644,21 @@ footer{border-top:2px solid var(--line);margin-top:40px;padding:24px 18px;text-a
 .q-toast{position:absolute;left:8px;right:8px;top:8px;text-align:center;font-family:var(--px);font-size:.5rem;line-height:1.7;color:var(--cream);background:rgba(12,10,22,.92);border:2px solid var(--teal);padding:8px 10px;opacity:0;transition:opacity .25s;pointer-events:none;}
 .q-toast.on{opacity:1;}
 .q-help{text-align:center;color:var(--grey);font-size:1.05rem;margin:10px auto 0;max-width:720px;}
+.q-banner{display:block;width:100%;height:auto;image-rendering:pixelated;image-rendering:crisp-edges;border:2px solid var(--line);margin:0 0 16px;background:#0C0A16;}
+.th-aquarys{--th:#4FB6E8;}.th-vigie{--th:#E0567E;}.th-classifile{--th:#F2B441;}.th-sidequest{--th:#A78BFF;}.th-lumea{--th:#FFD98A;}.th-avelyo{--th:#5FD08A;}.th-lifeos{--th:#FF9E5C;}
+.proj[class*="th-"]{border-color:var(--th);}
+.proj[class*="th-"] h3,.proj[class*="th-"] .plink{color:var(--th);}
+.proj[class*="th-"] .q-banner{border-color:var(--th);}
 #q-modal{display:none;position:fixed;inset:0;z-index:120;background:rgba(12,10,22,.95);overflow:auto;padding:76px 18px 40px;}
 #q-modal.on{display:block;}
 .q-modal-in{max-width:760px;margin:0 auto;}
 
 /* ============ INTRO 3D (arcade/scene3d.js) — la scène SVG reste le repli ============ */
-#scene3d{position:absolute;inset:0;opacity:0;transition:opacity .8s ease;}
+#scene3d{position:absolute;inset:0;opacity:0;transition:opacity .35s ease;}
 #intro.has3d #scene3d{opacity:1;}
-#intro.has3d .scene{display:none;}
+html.pre3d #intro .scene,#intro.has3d .scene{display:none;}
+html.pre3d #intro:not(.has3d) .startbar{visibility:hidden;}
+html.pre3d #intro:not(.has3d)::after{content:"LOADING...";position:absolute;left:0;right:0;top:50%;text-align:center;font-family:var(--px);font-size:.7rem;color:var(--teal);animation:blink 1.05s steps(1) infinite;}
 #intro.has3d .scene-wrap{position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;align-items:center;pointer-events:none;padding:18px 18px 22px;}
 #intro.has3d .titlebar{margin:0;}
 #intro.has3d .startbar{margin:0;pointer-events:auto;background:rgba(12,10,22,.6);padding:12px 20px;}
@@ -944,10 +956,8 @@ body.s3 .crt{opacity:.4;}
 <script src="./arcade/quest.js"><\/script>
 <script type="module">
 /* Décor 3D de l'intro : chargé seulement ici, à l'ouverture du mode arcade. Sans WebGL2 ou en mouvement réduit, la scène SVG reste. */
-var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var host = document.getElementById('scene3d'), intro = document.getElementById('intro');
-var gl = false; try{ gl = !!document.createElement('canvas').getContext('webgl2'); }catch(e){}
-if(gl && !reduce && host){
+if(window.__want3d && host){
   import('./arcade/scene3d.js').then(function(m){
     if(document.body.classList.contains('entered') || intro.classList.contains('diving')) return;
     var L = {
@@ -961,14 +971,23 @@ if(gl && !reduce && host){
     window.__s3 = s;
     window.__s3labels = function(l){ s.setLabels(L[l] || L.en); };
     intro.classList.add('has3d'); document.body.classList.add('s3');
-  }).catch(function(){});
+  }).catch(function(){ document.documentElement.classList.remove('pre3d'); });
 }
 <\/script>
 </body>
 </html>
 `;
   var ov=document.getElementById('arcadeOverlay'),fr=document.getElementById('arcade');
-  window.openArcade=function(){ fr.srcdoc=GAME; ov.classList.add('open'); document.body.style.overflow='hidden'; };
+  /* On précharge les fichiers du mode arcade dès qu'on s'approche d'un bouton (ou au repos), pour une ouverture sans attente. */
+  var warmed=false;
+  function warm(){ if(warmed) return; warmed=true;
+    var A='arcade/vendor/addons/', P=A+'postprocessing/', S=A+'shaders/';
+    ['arcade/vendor/three.module.min.js','arcade/scene3d.js','arcade/quest.js',A+'geometries/RoundedBoxGeometry.js',A+'environments/RoomEnvironment.js',A+'math/SimplexNoise.js',
+     P+'EffectComposer.js',P+'RenderPass.js',P+'UnrealBloomPass.js',P+'OutputPass.js',P+'GTAOPass.js',P+'ShaderPass.js',P+'Pass.js',P+'MaskPass.js',
+     S+'CopyShader.js',S+'LuminosityHighPassShader.js',S+'OutputShader.js',S+'GTAOShader.js',S+'PoissonDenoiseShader.js'].forEach(function(u){ try{ fetch(u).catch(function(){}); }catch(e){} }); }
+  ['arcadeOpen','arcadeOpen2','arcadeOpen3'].forEach(function(id){ var el=document.getElementById(id); if(el) ['pointerenter','touchstart','focus'].forEach(function(ev){ el.addEventListener(ev,warm,{passive:true}); }); });
+  var conn=navigator.connection; if(!(conn && conn.saveData)){ if(window.requestIdleCallback) requestIdleCallback(warm,{timeout:5000}); else setTimeout(warm,3500); }
+  window.openArcade=function(){ warm(); fr.srcdoc=GAME; ov.classList.add('open'); document.body.style.overflow='hidden'; };
   function closeArcade(){ ov.classList.remove('open'); fr.removeAttribute('srcdoc'); document.body.style.overflow=''; }
   ['arcadeOpen','arcadeOpen2','arcadeOpen3'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('click',window.openArcade); });
   document.getElementById('arcadeExit').addEventListener('click',closeArcade);
