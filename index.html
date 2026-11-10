@@ -683,7 +683,7 @@ body.s3 .crt{opacity:.4;}
     <div class="startbar">
       <div class="press">▶ PRESS START</div>
       <button class="startbtn" id="startBtn" type="button" data-en="ENTER" data-fr="ENTRER">ENTER</button>
-      <span class="hintkey" data-en="[ click or press ENTER ]" data-fr="[ clic ou touche ENTRÉE ]">[ click or press ENTER ]</span>
+      <span class="hintkey" data-en="[ hold and drag to look around ]" data-fr="[ maintiens et glisse pour regarder autour ]">[ hold and drag to look around ]</span>
     </div>
   </div>
 </div>
@@ -899,10 +899,7 @@ body.s3 .crt{opacity:.4;}
   }
   window.__arcadeEnter = enter;
   document.getElementById('startBtn').addEventListener('click', enter);
-  intro.addEventListener('click', function(e){ if(e.target.id!=='startBtn') enter(); });
-  document.addEventListener('keydown', function(e){
-    if(!started && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); enter(); }
-  });
+  /* On n'entre que par les boutons prévus : ENTRER ici, et les étiquettes du décor 3D. */
 
   /* menu navigation */
   var screens = {

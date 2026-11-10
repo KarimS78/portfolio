@@ -518,14 +518,14 @@ export function createScene(container, opts = {}) {
   const el = renderer.domElement;
   function onMove(ev) {
     if (diving) return;
-    if (ev.pointerType === 'mouse' && !dragging) { tYaw = -((ev.clientX / innerWidth) - 0.5) * 0.36; tPitch = ((ev.clientY / innerHeight) - 0.5) * 0.1; return; }
     if (dragging) { const dx = ev.clientX - lx, dy = ev.clientY - ly; lx = ev.clientX; ly = ev.clientY; moved += Math.abs(dx) + Math.abs(dy);
       tYaw = THREE.MathUtils.clamp(tYaw - dx * 0.004, -0.5, 0.5); tPitch = THREE.MathUtils.clamp(tPitch + dy * 0.002, -0.08, 0.12); }
   }
-  function onDown(ev) { dragging = true; moved = 0; lx = ev.clientX; ly = ev.clientY; }
-  function onUp() { dragging = false; }
+  function onDown(ev) { dragging = true; moved = 0; lx = ev.clientX; ly = ev.clientY; el.style.cursor = 'grabbing'; }
+  function onUp() { dragging = false; el.style.cursor = 'grab'; }
   function onClickCapture(ev) { if (moved > 8) { ev.stopPropagation(); ev.preventDefault(); moved = 0; return; } moved = 0;
     if (!diving && ev.target === el) { const o = pick(ev); if (o) { ev.stopPropagation(); ev.preventDefault(); o.userData.fn(); } } }
+  el.style.cursor = 'grab';
   el.addEventListener('pointerdown', onDown); window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp); window.addEventListener('pointercancel', onUp);
   container.addEventListener('click', onClickCapture, true);
 
@@ -534,7 +534,7 @@ export function createScene(container, opts = {}) {
     yaw += (tYaw - yaw) * 0.06; pitch += (tPitch - pitch) * 0.06;
     v.copy(basePos); if (portrait) v.set(0.25, 1.62, 2.05);
     v.sub(pivot).applyQuaternion(q.setFromAxisAngle(UP, yaw)); v.y += pitch * 3; v.add(pivot);
-    v.x = THREE.MathUtils.clamp(v.x, -2.2, 2.2); v.y += Math.sin(t * 0.5) * 0.008;
+    v.x = THREE.MathUtils.clamp(v.x, -2.2, 2.2);
     look.set(portrait ? 0.5 : 0.25, portrait ? 1.12 : 1.1, -1.5);
     if (diving) {
       const k = Math.min(1, (t - diving.t0) / diving.dur), s = k * k * (3 - 2 * k), s2 = k * k * k;
@@ -606,7 +606,7 @@ export function createScene(container, opts = {}) {
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   function pick(ev) { const r = el.getBoundingClientRect(); ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const h = ray.intersectObjects(hits, false); return h.length ? h[0].object : null; }
   let lastHover = 0;
-  function onHover(ev) { if (ev.pointerType !== 'mouse' || diving) return; const t = performance.now(); if (t - lastHover < 80) return; lastHover = t; el.style.cursor = pick(ev) ? 'pointer' : ''; }
+  function onHover(ev) { if (ev.pointerType !== 'mouse' || diving) return; const t = performance.now(); if (t - lastHover < 80) return; lastHover = t; if (!dragging) el.style.cursor = pick(ev) ? 'pointer' : 'grab'; }
   el.addEventListener('pointermove', onHover);
 
   /* ---------------- boucle ---------------- */
